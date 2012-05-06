@@ -8,10 +8,10 @@ import com.intellij.openapi.vfs.VirtualFile;
 import java.io.File;
 import java.io.IOException;
 
-public class OpenInJMeterAction extends AnAction {
+public class OpenWithJMeterAction extends AnAction {
     private String jmeterHome = System.getenv("JMETER_HOME");
 
-    public OpenInJMeterAction() {
+    public OpenWithJMeterAction() {
         super("Open with JMeter");
     }
 
