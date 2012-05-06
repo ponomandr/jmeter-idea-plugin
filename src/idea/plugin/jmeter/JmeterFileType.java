@@ -21,7 +21,7 @@ public class JmeterFileType implements FileType {
     @NotNull
     @Override
     public String getDescription() {
-        return "JMeter file";
+        return "JMeter files";
     }
 
     @NotNull
