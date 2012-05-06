@@ -9,6 +9,9 @@ import java.io.File;
 import java.io.IOException;
 
 public class OpenWithJMeterAction extends AnAction {
+
+    private static final boolean IS_OS_WINDOWS = System.getProperty("os.name").startsWith("Windows");
+
     private final File jmeter;
 
 
@@ -16,7 +19,7 @@ public class OpenWithJMeterAction extends AnAction {
         super("Open with JMeter");
 
         String jmeterHome = System.getenv("JMETER_HOME");
-        String ext = isWindows() ? ".bat" : ".sh";
+        String ext = IS_OS_WINDOWS ? ".bat" : ".sh";
         jmeter = new File(jmeterHome, "bin/jmeter" + ext);
     }
 
@@ -45,7 +48,4 @@ public class OpenWithJMeterAction extends AnAction {
         e.getPresentation().setEnabled(jmeter.exists());
     }
 
-    private boolean isWindows() {
-        return System.getProperty("os.name").contains("Windows");
-    }
 }
