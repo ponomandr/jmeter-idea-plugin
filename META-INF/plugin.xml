@@ -1,0 +1,27 @@
+<idea-plugin version="2">
+    <name>JMeter plugin</name>
+    <description>Does nothing so far</description>
+    <version>1.0-SNAPSHOT</version>
+    <vendor>Andrey Ponomarev</vendor>
+
+    <!-- please see http://confluence.jetbrains.net/display/IDEADEV/Build+Number+Ranges for description -->
+    <idea-version since-build="107.105"/>
+
+    <application-components>
+        <!-- Add your application components here -->
+    </application-components>
+
+    <project-components>
+        <!-- Add your project components here -->
+    </project-components>
+
+    <actions>
+        <action id="JMeter.Run" class="idea.plugin.jmeter.OpenInJMeterAction">
+            <add-to-group group-id="ProjectViewPopupMenu"/>
+        </action>
+    </actions>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <fileTypeFactory implementation="idea.plugin.jmeter.JMeterFileTypeFactory"/>
+    </extensions>
+</idea-plugin>
