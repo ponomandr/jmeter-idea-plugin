@@ -18,12 +18,12 @@
     </project-components>
 
     <actions>
-        <action id="JMeter.Open" class="idea.plugin.jmeter.OpenWithJMeterAction">
+        <action id="JMeter.Open" class="idea.plugin.jmeter.OpenWithJmeterAction">
             <add-to-group group-id="ProjectViewPopupMenu" anchor="first"/>
         </action>
     </actions>
 
     <extensions defaultExtensionNs="com.intellij">
-        <fileTypeFactory implementation="idea.plugin.jmeter.JMeterFileTypeFactory"/>
+        <fileTypeFactory implementation="idea.plugin.jmeter.JmeterFileTypeFactory"/>
     </extensions>
 </idea-plugin>

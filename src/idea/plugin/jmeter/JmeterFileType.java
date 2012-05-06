@@ -8,8 +8,8 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
-public class JMeterFileType implements FileType {
-    public static final JMeterFileType INSTANCE = new JMeterFileType();
+public class JmeterFileType implements FileType {
+    public static final JmeterFileType INSTANCE = new JmeterFileType();
     public static final Icon FILE_ICON = IconLoader.getIcon("/icons/beaker.png");
 
     @NotNull
