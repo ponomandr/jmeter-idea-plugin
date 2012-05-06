@@ -2,7 +2,7 @@
     <name>JMeter plugin</name>
     <description>Open JMeter files with JMeter. Configure JMETER_HOME environment variable before using this plugin.
     </description>
-    <version>0.1</version>
+    <version>0.2-SNAPSHOT</version>
     <vendor>Andrey Ponomarev</vendor>
     <category>Tools Integration</category>
 
