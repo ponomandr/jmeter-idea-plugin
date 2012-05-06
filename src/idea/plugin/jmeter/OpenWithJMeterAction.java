@@ -9,10 +9,15 @@ import java.io.File;
 import java.io.IOException;
 
 public class OpenWithJMeterAction extends AnAction {
-    private String jmeterHome = System.getenv("JMETER_HOME");
+    private final File jmeter;
+
 
     public OpenWithJMeterAction() {
         super("Open with JMeter");
+
+        String jmeterHome = System.getenv("JMETER_HOME");
+        String ext = isWindows() ? ".bat" : ".sh";
+        jmeter = new File(jmeterHome, "bin/jmeter" + ext);
     }
 
     @Override
@@ -23,7 +28,6 @@ public class OpenWithJMeterAction extends AnAction {
         }
 
         try {
-            File jmeter = new File(jmeterHome, "bin/jmeter");
             String command = jmeter.getPath() + " -t " + file.getPath();
             Runtime.getRuntime().exec(command);
         } catch (IOException e) {
@@ -38,6 +42,10 @@ public class OpenWithJMeterAction extends AnAction {
         if (file != null) {
             e.getPresentation().setVisible(JMeterFileType.INSTANCE.equals(file.getFileType()));
         }
-        e.getPresentation().setEnabled(jmeterHome != null);
+        e.getPresentation().setEnabled(jmeter.exists());
+    }
+
+    private boolean isWindows() {
+        return System.getProperty("os.name").contains("Windows");
     }
 }
