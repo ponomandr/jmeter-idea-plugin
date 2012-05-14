@@ -25,5 +25,6 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <fileTypeFactory implementation="idea.plugin.jmeter.JmeterFileTypeFactory"/>
+        <projectConfigurable instance="idea.plugin.jmeter.settings.JmeterSettingsConfigurable"/>
     </extensions>
 </idea-plugin>
