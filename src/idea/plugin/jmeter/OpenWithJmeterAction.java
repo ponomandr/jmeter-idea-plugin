@@ -6,12 +6,11 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import idea.plugin.jmeter.settings.JmeterSettings;
 
 import java.io.File;
 import java.io.IOException;
 
-import static idea.plugin.jmeter.settings.JmeterSettingsPresenter.JMETER_HOME_KEY;
-import static org.apache.commons.lang.StringUtils.isBlank;
 
 public class OpenWithJmeterAction extends AnAction {
 
@@ -59,8 +58,8 @@ public class OpenWithJmeterAction extends AnAction {
     }
 
     private static String getJmeterHome(Project project) {
-        String jmeterHome = PropertiesComponent.getInstance(project).getValue(JMETER_HOME_KEY);
-        return isBlank(jmeterHome) ? System.getenv("JMETER_HOME") : jmeterHome;
+        JmeterSettings settings = JmeterSettings.read(PropertiesComponent.getInstance(project));
+        return settings.isOverride() ? settings.getJmeterHome() : System.getenv("JMETER_HOME");
     }
 
 }

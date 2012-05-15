@@ -11,11 +11,14 @@ import javax.swing.*;
 
 public class JmeterSettingsConfigurable implements SearchableConfigurable {
 
-    private JmeterSettingsPresenter settingsPresenter;
     private final Project project;
+    private final PropertiesComponent propertiesComponent;
+    private JmeterSettingsForm settingsForm;
+    private JmeterSettings settings;
 
     public JmeterSettingsConfigurable(Project project) {
         this.project = project;
+        propertiesComponent = PropertiesComponent.getInstance(project);
     }
 
     @Nls
@@ -36,29 +39,30 @@ public class JmeterSettingsConfigurable implements SearchableConfigurable {
 
     @Override
     public JComponent createComponent() {
-        JmeterSettingsView settingsView = new JmeterSettingsView(project);
-        settingsPresenter = new JmeterSettingsPresenter(PropertiesComponent.getInstance(project), settingsView);
-        return settingsView;
+        settings = JmeterSettings.read(propertiesComponent);
+        settingsForm = new JmeterSettingsForm(project);
+        return settingsForm.getRootPanel();
     }
 
     @Override
     public boolean isModified() {
-        return settingsPresenter.isModified();
+        return settingsForm.isModified(settings);
     }
 
     @Override
     public void apply() throws ConfigurationException {
-        settingsPresenter.save();
+        settingsForm.getData(settings);
+        settings.save(propertiesComponent);
     }
 
     @Override
     public void reset() {
-        settingsPresenter.load();
+        settingsForm.setData(settings);
     }
 
     @Override
     public void disposeUIResources() {
-        settingsPresenter = null;
+        settingsForm = null;
     }
 
     @NotNull
