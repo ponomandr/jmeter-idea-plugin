@@ -1,8 +1,8 @@
 <idea-plugin version="2" url="https://github.com/ponomandr/jmeter-idea-plugin">
     <name>JMeter plugin</name>
-    <description>Open JMeter files with JMeter. Configure JMETER_HOME environment variable before using this plugin.
+    <description>Open JMeter files with JMeter.
     </description>
-    <version>0.2-SNAPSHOT</version>
+    <version>0.2</version>
     <vendor>Andrey Ponomarev</vendor>
     <category>Tools Integration</category>
 
@@ -27,4 +27,13 @@
         <fileTypeFactory implementation="idea.plugin.jmeter.JmeterFileTypeFactory"/>
         <projectConfigurable instance="idea.plugin.jmeter.settings.JmeterSettingsConfigurable"/>
     </extensions>
+
+    <change-notes>
+        <![CDATA[
+        <h4>Changes in 0.2</h4>
+        <ul>
+            <li>JMETER_HOME can be overriden in project settings
+        </ul>
+        ]]>
+    </change-notes>
 </idea-plugin>
