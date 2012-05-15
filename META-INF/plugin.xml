@@ -2,7 +2,7 @@
     <name>JMeter plugin</name>
     <description>Open JMeter files with JMeter.
     </description>
-    <version>0.2</version>
+    <version>0.3-SNAPSHOT</version>
     <vendor>Andrey Ponomarev</vendor>
     <category>Tools Integration</category>
 
