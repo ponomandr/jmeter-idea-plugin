@@ -1,0 +1,29 @@
+<idea-plugin version="2" url="https://github.com/ponomandr/jmeter-idea-plugin">
+    <name>JMeter plugin</name>
+    <description>Open JMeter files with JMeter. Configure JMETER_HOME environment variable before using this plugin.
+    </description>
+    <version>0.1</version>
+    <vendor>Andrey Ponomarev</vendor>
+    <category>Tools Integration</category>
+
+    <!-- please see http://confluence.jetbrains.net/display/IDEADEV/Build+Number+Ranges for description -->
+    <idea-version since-build="111.277"/>
+
+    <application-components>
+        <!-- Add your application components here -->
+    </application-components>
+
+    <project-components>
+        <!-- Add your project components here -->
+    </project-components>
+
+    <actions>
+        <action id="JMeter.Open" class="idea.plugin.jmeter.OpenWithJmeterAction">
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="first"/>
+        </action>
+    </actions>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <fileTypeFactory implementation="idea.plugin.jmeter.JmeterFileTypeFactory"/>
+    </extensions>
+</idea-plugin>
