@@ -13,7 +13,7 @@
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Test file"/>
+          <text value="Test file:"/>
         </properties>
       </component>
       <vspacer id="a3759">
@@ -34,7 +34,7 @@
           <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Property file"/>
+          <text value="Property file:"/>
         </properties>
       </component>
       <component id="10f79" class="com.intellij.openapi.ui.TextFieldWithBrowseButton" binding="propertyFile">
@@ -52,15 +52,7 @@
         <properties>
           <hideActionText value="false"/>
           <selected value="false"/>
-          <text value=""/>
-        </properties>
-      </component>
-      <component id="ab7d1" class="javax.swing.JLabel">
-        <constraints>
-          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <text value="Nongui mode"/>
+          <text value="nongui mode"/>
         </properties>
       </component>
     </children>
