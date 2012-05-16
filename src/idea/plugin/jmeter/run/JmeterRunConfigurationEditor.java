@@ -9,25 +9,27 @@ import javax.swing.*;
 
 public class JmeterRunConfigurationEditor extends SettingsEditor<JmeterRunConfiguration> {
 
+    private final Project project;
     private JmeterRunConfigurationForm form;
-    private Project project;
 
     public JmeterRunConfigurationEditor(Project project) {
         this.project = project;
     }
 
     @Override
-    protected void resetEditorFrom(JmeterRunConfiguration jmeterRunConfiguration) {
-        form.setTestFile(jmeterRunConfiguration.getTestFile());
-        form.setPropertyFile(jmeterRunConfiguration.getPropertyFile());
-        form.setNongui(jmeterRunConfiguration.isNongui());
+    protected void resetEditorFrom(JmeterRunConfiguration runConfiguration) {
+        form.setTestFile(runConfiguration.getTestFile());
+        form.setPropertyFile(runConfiguration.getPropertyFile());
+        form.setNongui(runConfiguration.isNongui());
+        form.setProperties(runConfiguration.getProperties());
     }
 
     @Override
-    protected void applyEditorTo(JmeterRunConfiguration jmeterRunConfiguration) throws ConfigurationException {
-        jmeterRunConfiguration.setTestFile(form.getTestFile());
-        jmeterRunConfiguration.setPropertyFile(form.getPropertyFile());
-        jmeterRunConfiguration.setNongui(form.isNongui());
+    protected void applyEditorTo(JmeterRunConfiguration runConfiguration) throws ConfigurationException {
+        runConfiguration.setTestFile(form.getTestFile());
+        runConfiguration.setPropertyFile(form.getPropertyFile());
+        runConfiguration.setNongui(form.isNongui());
+        runConfiguration.setProperties(form.getProperties());
     }
 
     @NotNull

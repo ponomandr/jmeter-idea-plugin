@@ -5,19 +5,18 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.ui.table.JBTable;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.LinkedHashMap;
 
 public class JmeterRunConfigurationForm {
     private JPanel rootPanel;
     private TextFieldWithBrowseButton testFile;
     private TextFieldWithBrowseButton propertyFile;
     private JCheckBox nongui;
-    private PropertiesTable propertiesTable;
+    private PropertyTable propertyTable;
 
     public JmeterRunConfigurationForm(final Project project) {
         testFile.addActionListener(new ActionListener() {
@@ -69,4 +68,12 @@ public class JmeterRunConfigurationForm {
         this.nongui.setSelected(nongui);
     }
 
+
+    public LinkedHashMap getProperties() {
+        return propertyTable.getProperties();
+    }
+
+    public void setProperties(LinkedHashMap properties) {
+        propertyTable.setProperties(properties);
+    }
 }

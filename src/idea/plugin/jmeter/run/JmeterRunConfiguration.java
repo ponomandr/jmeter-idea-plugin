@@ -9,15 +9,14 @@ import com.intellij.execution.runners.ProgramRunner;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.impl.JavaAwareProjectJdkTableImpl;
-import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.JDOMExternalizable;
-import com.intellij.openapi.util.JDOMExternalizerUtil;
-import com.intellij.openapi.util.WriteExternalException;
+import com.intellij.openapi.util.*;
 import idea.plugin.jmeter.settings.JmeterSettings;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import static org.apache.commons.lang.StringUtils.isBlank;
 
@@ -25,6 +24,7 @@ public class JmeterRunConfiguration extends RunConfigurationBase implements RunC
     private String testFile;
     private String propertyFile;
     private boolean nongui;
+    private LinkedHashMap<String, String> properties = new LinkedHashMap<String, String>();
 
     public JmeterRunConfiguration(Project project, ConfigurationFactory configurationFactory) {
         super(project, configurationFactory, "");
@@ -71,6 +71,7 @@ public class JmeterRunConfiguration extends RunConfigurationBase implements RunC
         JDOMExternalizerUtil.writeField(element, "testFile", testFile);
         JDOMExternalizerUtil.writeField(element, "propertyFile", propertyFile);
         JDOMExternalizerUtil.writeField(element, "nongui", String.valueOf(nongui));
+        JDOMExternalizer.writeMap(element, properties, "properties", "property");
     }
 
     @Override
@@ -79,6 +80,11 @@ public class JmeterRunConfiguration extends RunConfigurationBase implements RunC
         testFile = JDOMExternalizerUtil.readField(element, "testFile");
         propertyFile = JDOMExternalizerUtil.readField(element, "propertyFile");
         nongui = Boolean.valueOf(JDOMExternalizerUtil.readField(element, "propertyFile"));
+
+        LinkedHashMap<String, String> properties = this.properties;
+        JDOMExternalizer.readMap(element, properties, "properties", "property");
+        this.properties = properties;
+
     }
 
     public String getTestFile() {
@@ -105,6 +111,14 @@ public class JmeterRunConfiguration extends RunConfigurationBase implements RunC
         this.nongui = nongui;
     }
 
+    public LinkedHashMap<String, String> getProperties() {
+        return properties;
+    }
+
+    public void setProperties(LinkedHashMap<String, String> properties) {
+        this.properties = properties;
+    }
+
     private class JmeterRunProfileState extends JavaCommandLineState {
         public JmeterRunProfileState(ExecutionEnvironment executionEnvironment) {
             super(executionEnvironment);
@@ -117,6 +131,7 @@ public class JmeterRunConfiguration extends RunConfigurationBase implements RunC
             parameters.setJdk(JavaAwareProjectJdkTableImpl.getInstanceEx().getInternalJdk());
             parameters.setMainClass("org.apache.jmeter.NewDriver");
             parameters.getClassPath().add(JmeterSettings.getJmeterJar(getProject()));
+
             ParametersList programParameters = parameters.getProgramParametersList();
             programParameters.add("-t", testFile);
             if (nongui) {
@@ -124,6 +139,9 @@ public class JmeterRunConfiguration extends RunConfigurationBase implements RunC
             }
             if (!isBlank(propertyFile)) {
                 programParameters.add("-p", propertyFile);
+            }
+            for (Map.Entry<String, String> entry : properties.entrySet()) {
+                programParameters.add("-J", entry.getKey() + "=" + entry.getValue());
             }
             return parameters;
         }
