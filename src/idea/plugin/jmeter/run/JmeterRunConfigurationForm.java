@@ -11,8 +11,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class JmeterRunConfigurationForm {
-    private TextFieldWithBrowseButton testFile;
     private JPanel rootPanel;
+    private TextFieldWithBrowseButton testFile;
+    private TextFieldWithBrowseButton propertyFile;
 
     public JmeterRunConfigurationForm(final Project project) {
         testFile.addActionListener(new ActionListener() {
@@ -21,6 +22,16 @@ public class JmeterRunConfigurationForm {
                 VirtualFile file = FileChooser.chooseFile(project, FileChooserDescriptorFactory.createSingleLocalFileDescriptor());
                 if (file != null) {
                     testFile.setText(file.getPath());
+                }
+            }
+        });
+
+        propertyFile.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                VirtualFile file = FileChooser.chooseFile(project, FileChooserDescriptorFactory.createSingleLocalFileDescriptor());
+                if (file != null) {
+                    propertyFile.setText(file.getPath());
                 }
             }
         });
@@ -36,5 +47,13 @@ public class JmeterRunConfigurationForm {
 
     public void setTestFile(String testFile) {
         this.testFile.setText(testFile);
+    }
+
+    public String getPropertyFile() {
+        return propertyFile.getText();
+    }
+
+    public void setPropertyFile(String propertyFile) {
+        this.propertyFile.setText(propertyFile);
     }
 }

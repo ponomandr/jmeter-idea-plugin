@@ -19,11 +19,13 @@ public class JmeterRunConfigurationEditor extends SettingsEditor<JmeterRunConfig
     @Override
     protected void resetEditorFrom(JmeterRunConfiguration jmeterRunConfiguration) {
         form.setTestFile(jmeterRunConfiguration.getTestFile());
+        form.setPropertyFile(jmeterRunConfiguration.getPropertyFile());
     }
 
     @Override
     protected void applyEditorTo(JmeterRunConfiguration jmeterRunConfiguration) throws ConfigurationException {
         jmeterRunConfiguration.setTestFile(form.getTestFile());
+        jmeterRunConfiguration.setPropertyFile(form.getPropertyFile());
     }
 
     @NotNull

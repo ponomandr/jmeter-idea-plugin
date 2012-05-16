@@ -18,8 +18,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 
+import static org.apache.commons.lang.StringUtils.isBlank;
+
 public class JmeterRunConfiguration extends RunConfigurationBase implements RunConfiguration {
     private String testFile;
+    private String propertyFile;
 
     public JmeterRunConfiguration(Project project, ConfigurationFactory configurationFactory) {
         super(project, configurationFactory, "");
@@ -51,6 +54,10 @@ public class JmeterRunConfiguration extends RunConfigurationBase implements RunC
             throw new RuntimeConfigurationException("Test file not found");
         }
 
+        if (!isBlank(propertyFile) && !new File(propertyFile).exists()) {
+            throw new RuntimeConfigurationException("Properties file not found");
+        }
+
         if (!JmeterSettings.getJmeterJar(getProject()).exists()) {
             throw new RuntimeConfigurationException("JMeter not found");
         }
@@ -60,12 +67,14 @@ public class JmeterRunConfiguration extends RunConfigurationBase implements RunC
     public void writeExternal(Element element) throws WriteExternalException {
         super.writeExternal(element);
         JDOMExternalizerUtil.writeField(element, "testFile", testFile);
+        JDOMExternalizerUtil.writeField(element, "propertyFile", propertyFile);
     }
 
     @Override
     public void readExternal(Element element) throws InvalidDataException {
         super.readExternal(element);
         testFile = JDOMExternalizerUtil.readField(element, "testFile");
+        propertyFile = JDOMExternalizerUtil.readField(element, "propertyFile");
     }
 
     public String getTestFile() {
@@ -74,6 +83,14 @@ public class JmeterRunConfiguration extends RunConfigurationBase implements RunC
 
     public void setTestFile(String testFile) {
         this.testFile = testFile;
+    }
+
+    public String getPropertyFile() {
+        return propertyFile;
+    }
+
+    public void setPropertyFile(String propertyFile) {
+        this.propertyFile = propertyFile;
     }
 
     private class JmeterRunProfileState extends JavaCommandLineState {
@@ -89,6 +106,9 @@ public class JmeterRunConfiguration extends RunConfigurationBase implements RunC
             parameters.getClassPath().add(JmeterSettings.getJmeterJar(getProject()));
             ParametersList programParameters = parameters.getProgramParametersList();
             programParameters.add("-t", testFile);
+            if (!isBlank(propertyFile)) {
+                programParameters.add("-p", propertyFile);
+            }
             return parameters;
         }
     }

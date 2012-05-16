@@ -8,7 +8,7 @@
       <stringProp name="TestPlan.user_define_classpath"></stringProp>
       <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
       <boolProp name="TestPlan.functional_mode">false</boolProp>
-      <stringProp name="TestPlan.comments">Sample test for demonstrating JMeter Ant build script and Schematic stylesheet</stringProp>
+      <stringProp name="TestPlan.comments">Sample test for demonstrating jmeter-idea-plugin </stringProp>
     </TestPlan>
     <hashTree>
       <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
@@ -62,7 +62,7 @@
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
-          <stringProp name="HTTPSampler.domain">jmeter.apache.org</stringProp>
+          <stringProp name="HTTPSampler.domain">${__P(host, apache.org)}</stringProp>
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
           <stringProp name="HTTPSampler.response_timeout"></stringProp>
