@@ -10,6 +10,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class JmeterRunConfigurationForm {
     private JPanel rootPanel;
@@ -17,6 +18,7 @@ public class JmeterRunConfigurationForm {
     private TextFieldWithBrowseButton propertyFile;
     private JCheckBox nongui;
     private PropertyTable propertyTable;
+    private JTextField customParameters;
 
     public JmeterRunConfigurationForm(final Project project) {
         testFile.addActionListener(new ActionListener() {
@@ -69,11 +71,19 @@ public class JmeterRunConfigurationForm {
     }
 
 
-    public LinkedHashMap getProperties() {
+    public LinkedHashMap<String, String> getProperties() {
         return propertyTable.getProperties();
     }
 
-    public void setProperties(LinkedHashMap properties) {
+    public void setProperties(Map<String, String> properties) {
         propertyTable.setProperties(properties);
+    }
+
+    public String getCustomParameters() {
+        return customParameters.getText();
+    }
+
+    public void setCustomParameters(String customParameters) {
+        this.customParameters.setText(customParameters);
     }
 }

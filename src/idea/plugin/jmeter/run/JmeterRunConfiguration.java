@@ -9,7 +9,10 @@ import com.intellij.execution.runners.ProgramRunner;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.impl.JavaAwareProjectJdkTableImpl;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.InvalidDataException;
+import com.intellij.openapi.util.JDOMExternalizable;
+import com.intellij.openapi.util.JDOMExternalizer;
+import com.intellij.openapi.util.WriteExternalException;
 import idea.plugin.jmeter.settings.JmeterSettings;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
@@ -25,6 +28,7 @@ public class JmeterRunConfiguration extends RunConfigurationBase implements RunC
     private String propertyFile;
     private boolean nongui;
     private LinkedHashMap<String, String> properties = new LinkedHashMap<String, String>();
+    private String customParameters;
 
     public JmeterRunConfiguration(Project project, ConfigurationFactory configurationFactory) {
         super(project, configurationFactory, "");
@@ -52,7 +56,7 @@ public class JmeterRunConfiguration extends RunConfigurationBase implements RunC
 
     @Override
     public void checkConfiguration() throws RuntimeConfigurationException {
-        if (!new File(testFile).exists()) {
+        if (testFile == null || !new File(testFile).exists()) {
             throw new RuntimeConfigurationException("Test file not found");
         }
 
@@ -68,18 +72,20 @@ public class JmeterRunConfiguration extends RunConfigurationBase implements RunC
     @Override
     public void writeExternal(Element element) throws WriteExternalException {
         super.writeExternal(element);
-        JDOMExternalizerUtil.writeField(element, "testFile", testFile);
-        JDOMExternalizerUtil.writeField(element, "propertyFile", propertyFile);
-        JDOMExternalizerUtil.writeField(element, "nongui", String.valueOf(nongui));
+        JDOMExternalizer.write(element, "testFile", testFile);
+        JDOMExternalizer.write(element, "propertyFile", propertyFile);
+        JDOMExternalizer.write(element, "nongui", nongui);
+        JDOMExternalizer.write(element, "customParameters", customParameters);
         JDOMExternalizer.writeMap(element, properties, "properties", "property");
     }
 
     @Override
     public void readExternal(Element element) throws InvalidDataException {
         super.readExternal(element);
-        testFile = JDOMExternalizerUtil.readField(element, "testFile");
-        propertyFile = JDOMExternalizerUtil.readField(element, "propertyFile");
-        nongui = Boolean.valueOf(JDOMExternalizerUtil.readField(element, "propertyFile"));
+        testFile = JDOMExternalizer.readString(element, "testFile");
+        propertyFile = JDOMExternalizer.readString(element, "propertyFile");
+        nongui = JDOMExternalizer.readBoolean(element, "propertyFile");
+        customParameters = JDOMExternalizer.readString(element, "customParameters");
 
         LinkedHashMap<String, String> properties = this.properties;
         JDOMExternalizer.readMap(element, properties, "properties", "property");
@@ -119,6 +125,14 @@ public class JmeterRunConfiguration extends RunConfigurationBase implements RunC
         this.properties = properties;
     }
 
+    public String getCustomParameters() {
+        return customParameters;
+    }
+
+    public void setCustomParameters(String customParameters) {
+        this.customParameters = customParameters;
+    }
+
     private class JmeterRunProfileState extends JavaCommandLineState {
         public JmeterRunProfileState(ExecutionEnvironment executionEnvironment) {
             super(executionEnvironment);
@@ -143,6 +157,7 @@ public class JmeterRunConfiguration extends RunConfigurationBase implements RunC
             for (Map.Entry<String, String> entry : properties.entrySet()) {
                 programParameters.add("-J", entry.getKey() + "=" + entry.getValue());
             }
+            programParameters.addParametersString(customParameters);
             return parameters;
         }
     }
