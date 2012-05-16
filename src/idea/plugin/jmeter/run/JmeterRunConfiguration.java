@@ -27,7 +27,7 @@ public class JmeterRunConfiguration extends RunConfigurationBase implements RunC
 
     @Override
     public SettingsEditor<? extends RunConfiguration> getConfigurationEditor() {
-        return new JmeterRunConfigurationEditor();
+        return new JmeterRunConfigurationEditor(getProject());
     }
 
     @Override
@@ -42,18 +42,7 @@ public class JmeterRunConfiguration extends RunConfigurationBase implements RunC
 
     @Override
     public RunProfileState getState(@NotNull Executor executor, @NotNull ExecutionEnvironment executionEnvironment) throws ExecutionException {
-        return new JavaCommandLineState(executionEnvironment) {
-            @Override
-            protected JavaParameters createJavaParameters() throws ExecutionException {
-                JavaParameters parameters = new JavaParameters();
-                parameters.setJdk(JavaAwareProjectJdkTableImpl.getInstanceEx().getInternalJdk());
-                parameters.setMainClass("org.apache.jmeter.NewDriver");
-                parameters.getClassPath().add(JmeterSettings.getJmeterJar(getProject()));
-                ParametersList programParameters = parameters.getProgramParametersList();
-                programParameters.add("-t", testFile);
-                return parameters;
-            }
-        };
+        return new JmeterRunProfileState(executionEnvironment);
     }
 
     @Override
@@ -85,5 +74,22 @@ public class JmeterRunConfiguration extends RunConfigurationBase implements RunC
 
     public void setTestFile(String testFile) {
         this.testFile = testFile;
+    }
+
+    private class JmeterRunProfileState extends JavaCommandLineState {
+        public JmeterRunProfileState(ExecutionEnvironment executionEnvironment) {
+            super(executionEnvironment);
+        }
+
+        @Override
+        protected JavaParameters createJavaParameters() throws ExecutionException {
+            JavaParameters parameters = new JavaParameters();
+            parameters.setJdk(JavaAwareProjectJdkTableImpl.getInstanceEx().getInternalJdk());
+            parameters.setMainClass("org.apache.jmeter.NewDriver");
+            parameters.getClassPath().add(JmeterSettings.getJmeterJar(getProject()));
+            ParametersList programParameters = parameters.getProgramParametersList();
+            programParameters.add("-t", testFile);
+            return parameters;
+        }
     }
 }

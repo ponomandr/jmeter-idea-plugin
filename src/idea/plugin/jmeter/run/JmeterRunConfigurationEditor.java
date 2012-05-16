@@ -2,6 +2,7 @@ package idea.plugin.jmeter.run;
 
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SettingsEditor;
+import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -9,6 +10,11 @@ import javax.swing.*;
 public class JmeterRunConfigurationEditor extends SettingsEditor<JmeterRunConfiguration> {
 
     private JmeterRunConfigurationForm form;
+    private Project project;
+
+    public JmeterRunConfigurationEditor(Project project) {
+        this.project = project;
+    }
 
     @Override
     protected void resetEditorFrom(JmeterRunConfiguration jmeterRunConfiguration) {
@@ -23,7 +29,7 @@ public class JmeterRunConfigurationEditor extends SettingsEditor<JmeterRunConfig
     @NotNull
     @Override
     protected JComponent createEditor() {
-        form = new JmeterRunConfigurationForm();
+        form = new JmeterRunConfigurationForm(project);
         return form.getRootPanel();
     }
 
