@@ -3,6 +3,7 @@ package idea.plugin.jmeter.run;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.*;
+import com.intellij.execution.filters.TextConsoleBuilderImpl;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.runners.ProgramRunner;
 import com.intellij.openapi.options.SettingsEditor;
@@ -23,6 +24,7 @@ import static org.apache.commons.lang.StringUtils.isBlank;
 public class JmeterRunConfiguration extends RunConfigurationBase implements RunConfiguration {
     private String testFile;
     private String propertyFile;
+    private boolean nongui;
 
     public JmeterRunConfiguration(Project project, ConfigurationFactory configurationFactory) {
         super(project, configurationFactory, "");
@@ -68,6 +70,7 @@ public class JmeterRunConfiguration extends RunConfigurationBase implements RunC
         super.writeExternal(element);
         JDOMExternalizerUtil.writeField(element, "testFile", testFile);
         JDOMExternalizerUtil.writeField(element, "propertyFile", propertyFile);
+        JDOMExternalizerUtil.writeField(element, "nongui", String.valueOf(nongui));
     }
 
     @Override
@@ -75,6 +78,7 @@ public class JmeterRunConfiguration extends RunConfigurationBase implements RunC
         super.readExternal(element);
         testFile = JDOMExternalizerUtil.readField(element, "testFile");
         propertyFile = JDOMExternalizerUtil.readField(element, "propertyFile");
+        nongui = Boolean.valueOf(JDOMExternalizerUtil.readField(element, "propertyFile"));
     }
 
     public String getTestFile() {
@@ -93,9 +97,18 @@ public class JmeterRunConfiguration extends RunConfigurationBase implements RunC
         this.propertyFile = propertyFile;
     }
 
+    public boolean isNongui() {
+        return nongui;
+    }
+
+    public void setNongui(boolean nongui) {
+        this.nongui = nongui;
+    }
+
     private class JmeterRunProfileState extends JavaCommandLineState {
         public JmeterRunProfileState(ExecutionEnvironment executionEnvironment) {
             super(executionEnvironment);
+            setConsoleBuilder(new TextConsoleBuilderImpl(getProject()));
         }
 
         @Override
@@ -106,6 +119,9 @@ public class JmeterRunConfiguration extends RunConfigurationBase implements RunC
             parameters.getClassPath().add(JmeterSettings.getJmeterJar(getProject()));
             ParametersList programParameters = parameters.getProgramParametersList();
             programParameters.add("-t", testFile);
+            if (nongui) {
+                programParameters.add("-n");
+            }
             if (!isBlank(propertyFile)) {
                 programParameters.add("-p", propertyFile);
             }
