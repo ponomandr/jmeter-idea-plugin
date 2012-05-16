@@ -27,6 +27,7 @@
         <fileTypeFactory implementation="idea.plugin.jmeter.JmeterFileTypeFactory"/>
         <projectConfigurable instance="idea.plugin.jmeter.settings.JmeterSettingsConfigurable"/>
         <configurationType implementation="idea.plugin.jmeter.run.JmeterConfigurationType"/>
+        <programRunner implementation="idea.plugin.jmeter.run.JmeterProgramRunner"/>
     </extensions>
 
     <change-notes>

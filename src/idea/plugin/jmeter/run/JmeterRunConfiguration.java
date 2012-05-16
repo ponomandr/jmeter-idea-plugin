@@ -7,10 +7,20 @@ import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.runners.ProgramRunner;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.projectRoots.impl.JavaAwareProjectJdkTableImpl;
+import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.JDOMExternalizable;
+import com.intellij.openapi.util.JDOMExternalizerUtil;
+import com.intellij.openapi.util.WriteExternalException;
+import idea.plugin.jmeter.settings.JmeterSettings;
+import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
+
 public class JmeterRunConfiguration extends RunConfigurationBase implements RunConfiguration {
+    private String testFile;
+
     public JmeterRunConfiguration(Project project, ConfigurationFactory configurationFactory) {
         super(project, configurationFactory, "");
     }
@@ -36,7 +46,11 @@ public class JmeterRunConfiguration extends RunConfigurationBase implements RunC
             @Override
             protected JavaParameters createJavaParameters() throws ExecutionException {
                 JavaParameters parameters = new JavaParameters();
-                parameters.setMainClass("Main");
+                parameters.setJdk(JavaAwareProjectJdkTableImpl.getInstanceEx().getInternalJdk());
+                parameters.setMainClass("org.apache.jmeter.NewDriver");
+                parameters.getClassPath().add(JmeterSettings.getJmeterJar(getProject()));
+                ParametersList programParameters = parameters.getProgramParametersList();
+                programParameters.add("-t", testFile);
                 return parameters;
             }
         };
@@ -44,5 +58,32 @@ public class JmeterRunConfiguration extends RunConfigurationBase implements RunC
 
     @Override
     public void checkConfiguration() throws RuntimeConfigurationException {
+        if (!new File(testFile).exists()) {
+            throw new RuntimeConfigurationException("Test file not found");
+        }
+
+        if (!JmeterSettings.getJmeterJar(getProject()).exists()) {
+            throw new RuntimeConfigurationException("JMeter not found");
+        }
+    }
+
+    @Override
+    public void writeExternal(Element element) throws WriteExternalException {
+        super.writeExternal(element);
+        JDOMExternalizerUtil.writeField(element, "testFile", testFile);
+    }
+
+    @Override
+    public void readExternal(Element element) throws InvalidDataException {
+        super.readExternal(element);
+        testFile = JDOMExternalizerUtil.readField(element, "testFile");
+    }
+
+    public String getTestFile() {
+        return testFile;
+    }
+
+    public void setTestFile(String testFile) {
+        this.testFile = testFile;
     }
 }
