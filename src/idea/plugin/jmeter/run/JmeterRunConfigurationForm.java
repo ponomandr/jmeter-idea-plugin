@@ -5,8 +5,10 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.ui.table.JBTable;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -15,6 +17,7 @@ public class JmeterRunConfigurationForm {
     private TextFieldWithBrowseButton testFile;
     private TextFieldWithBrowseButton propertyFile;
     private JCheckBox nongui;
+    private PropertiesTable propertiesTable;
 
     public JmeterRunConfigurationForm(final Project project) {
         testFile.addActionListener(new ActionListener() {
@@ -65,4 +68,5 @@ public class JmeterRunConfigurationForm {
     public void setNongui(boolean nongui) {
         this.nongui.setSelected(nongui);
     }
+
 }
