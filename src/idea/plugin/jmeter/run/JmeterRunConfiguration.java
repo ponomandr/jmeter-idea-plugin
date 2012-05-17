@@ -26,7 +26,6 @@ import static org.apache.commons.lang.StringUtils.isBlank;
 public class JmeterRunConfiguration extends RunConfigurationBase implements RunConfiguration {
     private String testFile;
     private String propertyFile;
-    private boolean nongui;
     private LinkedHashMap<String, String> properties = new LinkedHashMap<String, String>();
     private String customParameters;
 
@@ -74,7 +73,6 @@ public class JmeterRunConfiguration extends RunConfigurationBase implements RunC
         super.writeExternal(element);
         JDOMExternalizer.write(element, "testFile", testFile);
         JDOMExternalizer.write(element, "propertyFile", propertyFile);
-        JDOMExternalizer.write(element, "nongui", nongui);
         JDOMExternalizer.write(element, "customParameters", customParameters);
         JDOMExternalizer.writeMap(element, properties, "properties", "property");
     }
@@ -84,13 +82,11 @@ public class JmeterRunConfiguration extends RunConfigurationBase implements RunC
         super.readExternal(element);
         testFile = JDOMExternalizer.readString(element, "testFile");
         propertyFile = JDOMExternalizer.readString(element, "propertyFile");
-        nongui = JDOMExternalizer.readBoolean(element, "propertyFile");
         customParameters = JDOMExternalizer.readString(element, "customParameters");
 
         LinkedHashMap<String, String> properties = this.properties;
         JDOMExternalizer.readMap(element, properties, "properties", "property");
         this.properties = properties;
-
     }
 
     public String getTestFile() {
@@ -107,14 +103,6 @@ public class JmeterRunConfiguration extends RunConfigurationBase implements RunC
 
     public void setPropertyFile(String propertyFile) {
         this.propertyFile = propertyFile;
-    }
-
-    public boolean isNongui() {
-        return nongui;
-    }
-
-    public void setNongui(boolean nongui) {
-        this.nongui = nongui;
     }
 
     public LinkedHashMap<String, String> getProperties() {
@@ -148,9 +136,6 @@ public class JmeterRunConfiguration extends RunConfigurationBase implements RunC
 
             ParametersList programParameters = parameters.getProgramParametersList();
             programParameters.add("-t", testFile);
-            if (nongui) {
-                programParameters.add("-n");
-            }
             if (!isBlank(propertyFile)) {
                 programParameters.add("-p", propertyFile);
             }

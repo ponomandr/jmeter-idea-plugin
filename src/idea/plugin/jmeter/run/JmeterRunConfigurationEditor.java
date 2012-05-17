@@ -20,7 +20,6 @@ public class JmeterRunConfigurationEditor extends SettingsEditor<JmeterRunConfig
     protected void resetEditorFrom(JmeterRunConfiguration runConfiguration) {
         form.setTestFile(runConfiguration.getTestFile());
         form.setPropertyFile(runConfiguration.getPropertyFile());
-        form.setNongui(runConfiguration.isNongui());
         form.setProperties(runConfiguration.getProperties());
         form.setCustomParameters(runConfiguration.getCustomParameters());
     }
@@ -29,7 +28,6 @@ public class JmeterRunConfigurationEditor extends SettingsEditor<JmeterRunConfig
     protected void applyEditorTo(JmeterRunConfiguration runConfiguration) throws ConfigurationException {
         runConfiguration.setTestFile(form.getTestFile());
         runConfiguration.setPropertyFile(form.getPropertyFile());
-        runConfiguration.setNongui(form.isNongui());
         runConfiguration.setProperties(form.getProperties());
         runConfiguration.setCustomParameters(form.getCustomParameters());
     }

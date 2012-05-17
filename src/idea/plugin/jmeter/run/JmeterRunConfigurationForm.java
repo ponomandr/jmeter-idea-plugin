@@ -16,7 +16,6 @@ public class JmeterRunConfigurationForm {
     private JPanel rootPanel;
     private TextFieldWithBrowseButton testFile;
     private TextFieldWithBrowseButton propertyFile;
-    private JCheckBox nongui;
     private PropertyTable propertyTable;
     private JTextField customParameters;
 
@@ -61,15 +60,6 @@ public class JmeterRunConfigurationForm {
     public void setPropertyFile(String propertyFile) {
         this.propertyFile.setText(propertyFile);
     }
-
-    public boolean isNongui() {
-        return nongui.isSelected();
-    }
-
-    public void setNongui(boolean nongui) {
-        this.nongui.setSelected(nongui);
-    }
-
 
     public LinkedHashMap<String, String> getProperties() {
         return propertyTable.getProperties();
