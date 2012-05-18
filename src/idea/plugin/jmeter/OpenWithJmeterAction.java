@@ -1,6 +1,5 @@
 package idea.plugin.jmeter;
 
-import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
@@ -52,14 +51,9 @@ public class OpenWithJmeterAction extends AnAction {
     }
 
     private static File getJmeterExecutable(Project project) {
-        String jmeterHome = getJmeterHome(project);
+        String jmeterHome = JmeterSettings.getJmeterHome(project);
         String ext = IS_OS_WINDOWS ? ".bat" : ".sh";
         return new File(jmeterHome, "bin/jmeter" + ext);
-    }
-
-    private static String getJmeterHome(Project project) {
-        JmeterSettings settings = JmeterSettings.read(PropertiesComponent.getInstance(project));
-        return settings.isOverride() ? settings.getJmeterHome() : System.getenv("JMETER_HOME");
     }
 
 }

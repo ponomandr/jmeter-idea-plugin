@@ -1,8 +1,7 @@
 <idea-plugin version="2" url="https://github.com/ponomandr/jmeter-idea-plugin">
     <name>JMeter plugin</name>
-    <description>Open JMeter files with JMeter.
-    </description>
-    <version>0.2</version>
+    <description>Open JMeter files with JMeter. Create run configurations if special test setup is required.</description>
+    <version>0.3</version>
     <vendor>Andrey Ponomarev</vendor>
     <category>Tools Integration</category>
 
@@ -26,10 +25,16 @@
     <extensions defaultExtensionNs="com.intellij">
         <fileTypeFactory implementation="idea.plugin.jmeter.JmeterFileTypeFactory"/>
         <projectConfigurable instance="idea.plugin.jmeter.settings.JmeterSettingsConfigurable"/>
+        <configurationType implementation="idea.plugin.jmeter.run.JmeterConfigurationType"/>
+        <programRunner implementation="idea.plugin.jmeter.run.JmeterProgramRunner"/>
     </extensions>
 
     <change-notes>
         <![CDATA[
+        <h4>Changes in 0.3</h4>
+        <ul>
+            <li>Added run configurations.
+        </ul>
         <h4>Changes in 0.2</h4>
         <ul>
             <li>JMETER_HOME can be overriden in project settings
