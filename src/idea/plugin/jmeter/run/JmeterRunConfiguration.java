@@ -3,12 +3,10 @@ package idea.plugin.jmeter.run;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.*;
-import com.intellij.execution.filters.TextConsoleBuilderImpl;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.runners.ProgramRunner;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.impl.JavaAwareProjectJdkTableImpl;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.JDOMExternalizable;
 import com.intellij.openapi.util.JDOMExternalizer;
@@ -19,11 +17,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 import static org.apache.commons.lang.StringUtils.isBlank;
 
-public class JmeterRunConfiguration extends RunConfigurationBase implements RunConfiguration {
+public class JmeterRunConfiguration extends RunConfigurationBase implements LocatableConfiguration {
     private String testFile;
     private String propertyFile;
     private LinkedHashMap<String, String> properties = new LinkedHashMap<String, String>();
@@ -121,29 +118,13 @@ public class JmeterRunConfiguration extends RunConfigurationBase implements RunC
         this.customParameters = customParameters;
     }
 
-    private class JmeterRunProfileState extends JavaCommandLineState {
-        public JmeterRunProfileState(ExecutionEnvironment executionEnvironment) {
-            super(executionEnvironment);
-            setConsoleBuilder(new TextConsoleBuilderImpl(getProject()));
-        }
+    @Override
+    public boolean isGeneratedName() {
+        return false;
+    }
 
-        @Override
-        protected JavaParameters createJavaParameters() throws ExecutionException {
-            JavaParameters parameters = new JavaParameters();
-            parameters.setJdk(JavaAwareProjectJdkTableImpl.getInstanceEx().getInternalJdk());
-            parameters.setMainClass("org.apache.jmeter.NewDriver");
-            parameters.getClassPath().add(JmeterSettings.getJmeterJar(getProject()));
-
-            ParametersList programParameters = parameters.getProgramParametersList();
-            programParameters.add("-t", testFile);
-            if (!isBlank(propertyFile)) {
-                programParameters.add("-p", propertyFile);
-            }
-            for (Map.Entry<String, String> entry : properties.entrySet()) {
-                programParameters.add("-J", entry.getKey() + "=" + entry.getValue());
-            }
-            programParameters.addParametersString(customParameters);
-            return parameters;
-        }
+    @Override
+    public String suggestedName() {
+        return getName();
     }
 }

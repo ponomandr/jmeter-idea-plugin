@@ -2,6 +2,7 @@ package idea.plugin.jmeter.run;
 
 import com.intellij.execution.configurations.ConfigurationFactory;
 import com.intellij.execution.configurations.ConfigurationType;
+import com.intellij.execution.configurations.ConfigurationTypeUtil;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.openapi.project.Project;
 import idea.plugin.jmeter.JmeterFileType;
@@ -21,6 +22,11 @@ public class JmeterConfigurationType implements ConfigurationType {
             }
         };
     }
+
+    public static JmeterConfigurationType getInstance() {
+        return ConfigurationTypeUtil.findConfigurationType(JmeterConfigurationType.class);
+    }
+
 
     @Override
     public String getDisplayName() {
@@ -46,5 +52,9 @@ public class JmeterConfigurationType implements ConfigurationType {
     @Override
     public ConfigurationFactory[] getConfigurationFactories() {
         return new ConfigurationFactory[]{myConfigurationFactory};
+    }
+
+    public ConfigurationFactory getConfigurationFactory() {
+        return myConfigurationFactory;
     }
 }
