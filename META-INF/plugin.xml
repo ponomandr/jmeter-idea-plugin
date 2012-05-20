@@ -2,7 +2,7 @@
     <name>JMeter plugin</name>
     <description>Open JMeter files with JMeter. Create run configurations if special test setup is required.
     </description>
-    <version>1.1-SHANPSHOT</version>
+    <version>1.1</version>
     <vendor>Andrey Ponomarev</vendor>
     <category>Tools Integration</category>
 
