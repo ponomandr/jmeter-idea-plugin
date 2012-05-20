@@ -1,8 +1,7 @@
 <idea-plugin version="2" url="https://github.com/ponomandr/jmeter-idea-plugin">
     <name>JMeter plugin</name>
-    <description>Open JMeter files with JMeter. Create run configurations if special test setup is required.
-    </description>
-    <version>1.1-SHANPSHOT</version>
+    <description>Create run configurations and run JMeter tests from Intellij IDEA.</description>
+    <version>1.1</version>
     <vendor>Andrey Ponomarev</vendor>
     <category>Tools Integration</category>
 
