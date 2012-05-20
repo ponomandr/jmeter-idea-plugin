@@ -20,7 +20,7 @@ import java.util.LinkedHashMap;
 
 import static org.apache.commons.lang.StringUtils.isBlank;
 
-public class JmeterRunConfiguration extends RunConfigurationBase implements RunConfiguration {
+public class JmeterRunConfiguration extends RunConfigurationBase implements LocatableConfiguration {
     private String testFile;
     private String propertyFile;
     private LinkedHashMap<String, String> properties = new LinkedHashMap<String, String>();
@@ -118,4 +118,13 @@ public class JmeterRunConfiguration extends RunConfigurationBase implements RunC
         this.customParameters = customParameters;
     }
 
+    @Override
+    public boolean isGeneratedName() {
+        return false;
+    }
+
+    @Override
+    public String suggestedName() {
+        return getName();
+    }
 }

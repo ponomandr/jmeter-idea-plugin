@@ -17,18 +17,12 @@
         <!-- Add your project components here -->
     </project-components>
 
-    <actions>
-        <action id="JMeter.Run" class="idea.plugin.jmeter.RunJmeterAction">
-            <add-to-group group-id="ProjectViewPopupMenuRunGroup" anchor="first"/>
-            <keyboard-shortcut keymap="$default" first-keystroke="ctrl shift F10"/>
-        </action>
-    </actions>
-
     <extensions defaultExtensionNs="com.intellij">
         <fileTypeFactory implementation="idea.plugin.jmeter.JmeterFileTypeFactory"/>
         <projectConfigurable instance="idea.plugin.jmeter.settings.JmeterSettingsConfigurable"/>
         <configurationType implementation="idea.plugin.jmeter.run.JmeterConfigurationType"/>
         <programRunner implementation="idea.plugin.jmeter.run.JmeterProgramRunner"/>
+        <configurationProducer implementation="idea.plugin.jmeter.JmeterConfigurationProducer"/>
     </extensions>
 
 </idea-plugin>
