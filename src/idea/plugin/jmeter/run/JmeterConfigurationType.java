@@ -47,4 +47,8 @@ public class JmeterConfigurationType implements ConfigurationType {
     public ConfigurationFactory[] getConfigurationFactories() {
         return new ConfigurationFactory[]{myConfigurationFactory};
     }
+
+    public ConfigurationFactory getConfigurationFactory() {
+        return myConfigurationFactory;
+    }
 }
