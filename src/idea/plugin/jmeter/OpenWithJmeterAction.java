@@ -16,7 +16,7 @@ public class OpenWithJmeterAction extends AnAction {
     private static final boolean IS_OS_WINDOWS = System.getProperty("os.name").startsWith("Windows");
 
     public OpenWithJmeterAction() {
-        super("Open with JMeter");
+        super("Open with JMeter", null, JmeterFileType.FILE_ICON);
     }
 
     @Override
