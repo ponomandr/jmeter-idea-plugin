@@ -24,7 +24,7 @@ import static idea.plugin.jmeter.settings.JmeterSettings.getJmeterJar;
 public class RunJmeterAction extends AnAction {
 
     public RunJmeterAction() {
-        super("R&un", null, IconLoader.getIcon("/general/toolWindowRun.png"));
+        super("R&un", null, IconLoader.getIcon("/actions/execute.png"));
     }
 
     @Override
