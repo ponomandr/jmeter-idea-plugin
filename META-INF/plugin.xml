@@ -1,7 +1,7 @@
 <idea-plugin version="2" url="https://github.com/ponomandr/jmeter-idea-plugin">
     <name>JMeter plugin</name>
     <description>Create run configurations and run JMeter tests from Intellij IDEA.</description>
-    <version>1.1</version>
+    <version>1.1.1</version>
     <vendor>Andrey Ponomarev</vendor>
     <category>Tools Integration</category>
 
@@ -23,5 +23,18 @@
         <programRunner implementation="idea.plugin.jmeter.run.JmeterProgramRunner"/>
         <configurationProducer implementation="idea.plugin.jmeter.JmeterConfigurationProducer"/>
     </extensions>
+
+    <change-notes>
+        <![CDATA[
+        <h4>Changes in 1.1.1</h4>
+        <ul>
+            <li>Bug fix: JMeter completely replaced JUnit actions</ul>
+        </ul>
+        <h4>Changes in 1.1</h4>
+        <ul>
+            <li>Added "Run", "Create" and "Select" actions to context menu similar to JUnit tests.</ul>
+        </ul>
+        ]]>
+    </change-notes>
 
 </idea-plugin>

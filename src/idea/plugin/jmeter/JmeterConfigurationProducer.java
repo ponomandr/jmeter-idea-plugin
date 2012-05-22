@@ -33,7 +33,7 @@ public class JmeterConfigurationProducer extends RuntimeConfigurationProducer {
         myPsiElement = location.getPsiElement();
 
         VirtualFile file = location.getVirtualFile();
-        if (file == null) {
+        if (file == null || !JmeterFileType.INSTANCE.equals(file.getFileType())) {
             return null;
         }
 
