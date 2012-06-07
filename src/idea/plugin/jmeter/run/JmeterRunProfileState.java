@@ -30,6 +30,9 @@ class JmeterRunProfileState extends JavaCommandLineState {
         parameters.setJdk(JavaAwareProjectJdkTableImpl.getInstanceEx().getInternalJdk());
         parameters.setMainClass("org.apache.jmeter.NewDriver");
         parameters.getClassPath().add(JmeterSettings.getJmeterJar(executionEnvironment.getProject()));
+        if (!isBlank(runConfiguration.getWorkingDirectory())) {
+            parameters.setWorkingDirectory(runConfiguration.getWorkingDirectory());
+        }
 
         ParametersList programParameters = parameters.getProgramParametersList();
         programParameters.add("-t", runConfiguration.getTestFile());

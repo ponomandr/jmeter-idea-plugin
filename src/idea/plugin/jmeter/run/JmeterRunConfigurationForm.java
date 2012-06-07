@@ -18,6 +18,7 @@ public class JmeterRunConfigurationForm {
     private TextFieldWithBrowseButton propertyFile;
     private PropertyTable propertyTable;
     private JTextField customParameters;
+    private TextFieldWithBrowseButton workingDirectory;
 
     public JmeterRunConfigurationForm(final Project project) {
         testFile.addActionListener(new ActionListener() {
@@ -36,6 +37,16 @@ public class JmeterRunConfigurationForm {
                 VirtualFile file = FileChooser.chooseFile(project, FileChooserDescriptorFactory.createSingleLocalFileDescriptor());
                 if (file != null) {
                     propertyFile.setText(file.getPath());
+                }
+            }
+        });
+
+        workingDirectory.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                VirtualFile file = FileChooser.chooseFile(project, FileChooserDescriptorFactory.createSingleFolderDescriptor());
+                if (file != null) {
+                    workingDirectory.setText(file.getPath());
                 }
             }
         });
@@ -75,5 +86,13 @@ public class JmeterRunConfigurationForm {
 
     public void setCustomParameters(String customParameters) {
         this.customParameters.setText(customParameters);
+    }
+
+    public String getWorkingDirectory() {
+        return workingDirectory.getText();
+    }
+
+    public void setWorkingDirectory(String workingDirectory) {
+        this.workingDirectory.setText(workingDirectory);
     }
 }

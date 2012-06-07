@@ -25,6 +25,7 @@ public class JmeterRunConfiguration extends RunConfigurationBase implements Loca
     private String propertyFile;
     private LinkedHashMap<String, String> properties = new LinkedHashMap<String, String>();
     private String customParameters;
+    private String workingDirectory;
 
     public JmeterRunConfiguration(Project project, ConfigurationFactory configurationFactory) {
         super(project, configurationFactory, "");
@@ -116,6 +117,14 @@ public class JmeterRunConfiguration extends RunConfigurationBase implements Loca
 
     public void setCustomParameters(String customParameters) {
         this.customParameters = customParameters;
+    }
+
+    public String getWorkingDirectory() {
+        return workingDirectory;
+    }
+
+    public void setWorkingDirectory(String workingDirectory) {
+        this.workingDirectory = workingDirectory;
     }
 
     @Override
