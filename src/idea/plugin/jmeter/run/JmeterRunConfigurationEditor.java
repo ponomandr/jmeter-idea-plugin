@@ -22,6 +22,7 @@ public class JmeterRunConfigurationEditor extends SettingsEditor<JmeterRunConfig
         form.setPropertyFile(runConfiguration.getPropertyFile());
         form.setProperties(runConfiguration.getProperties());
         form.setCustomParameters(runConfiguration.getCustomParameters());
+        form.setWorkingDirectory(runConfiguration.getWorkingDirectory());
     }
 
     @Override
@@ -30,6 +31,7 @@ public class JmeterRunConfigurationEditor extends SettingsEditor<JmeterRunConfig
         runConfiguration.setPropertyFile(form.getPropertyFile());
         runConfiguration.setProperties(form.getProperties());
         runConfiguration.setCustomParameters(form.getCustomParameters());
+        runConfiguration.setWorkingDirectory(form.getWorkingDirectory());
     }
 
     @NotNull
