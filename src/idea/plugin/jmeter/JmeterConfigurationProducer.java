@@ -32,17 +32,21 @@ public class JmeterConfigurationProducer extends RuntimeConfigurationProducer {
     protected RunnerAndConfigurationSettings createConfigurationByElement(Location location, ConfigurationContext context) {
         myPsiElement = location.getPsiElement();
 
-        VirtualFile file = location.getVirtualFile();
-        if (file == null || !JmeterFileType.INSTANCE.equals(file.getFileType())) {
+        VirtualFile testFile = location.getVirtualFile();
+        if (testFile == null || !JmeterFileType.INSTANCE.equals(testFile.getFileType())) {
             return null;
         }
 
         Project project = location.getProject();
 
         ConfigurationFactory configurationFactory = JmeterConfigurationType.getInstance().getConfigurationFactory();
-        RunnerAndConfigurationSettings configurationSettings = RunManagerEx.getInstanceEx(project).createConfiguration(file.getNameWithoutExtension(), configurationFactory);
+        RunnerAndConfigurationSettings configurationSettings = RunManagerEx.getInstanceEx(project).createConfiguration(testFile.getNameWithoutExtension(), configurationFactory);
         JmeterRunConfiguration runConfiguration = (JmeterRunConfiguration) configurationSettings.getConfiguration();
-        runConfiguration.setTestFile(file.getPath());
+        runConfiguration.setTestFile(testFile.getPath());
+        VirtualFile propertyFile = testFile.getParent().findChild(testFile.getNameWithoutExtension() + ".properties");
+        if (propertyFile != null) {
+            runConfiguration.setPropertyFile(propertyFile.getPath());
+        }
         return configurationSettings;
     }
 
