@@ -72,6 +72,7 @@ public class JmeterRunConfiguration extends RunConfigurationBase implements Loca
         JDOMExternalizer.write(element, "testFile", testFile);
         JDOMExternalizer.write(element, "propertyFile", propertyFile);
         JDOMExternalizer.write(element, "customParameters", customParameters);
+        JDOMExternalizer.write(element, "workingDirectory", workingDirectory);
         JDOMExternalizer.writeMap(element, properties, "properties", "property");
     }
 
@@ -81,6 +82,7 @@ public class JmeterRunConfiguration extends RunConfigurationBase implements Loca
         testFile = JDOMExternalizer.readString(element, "testFile");
         propertyFile = JDOMExternalizer.readString(element, "propertyFile");
         customParameters = JDOMExternalizer.readString(element, "customParameters");
+        workingDirectory = JDOMExternalizer.readString(element, "workingDirectory");
 
         LinkedHashMap<String, String> properties = this.properties;
         JDOMExternalizer.readMap(element, properties, "properties", "property");

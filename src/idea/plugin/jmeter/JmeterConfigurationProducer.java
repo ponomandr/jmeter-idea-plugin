@@ -32,17 +32,44 @@ public class JmeterConfigurationProducer extends RuntimeConfigurationProducer {
     protected RunnerAndConfigurationSettings createConfigurationByElement(Location location, ConfigurationContext context) {
         myPsiElement = location.getPsiElement();
 
-        VirtualFile file = location.getVirtualFile();
-        if (file == null || !JmeterFileType.INSTANCE.equals(file.getFileType())) {
+        VirtualFile testFile = location.getVirtualFile();
+        if (testFile == null || !JmeterFileType.INSTANCE.equals(testFile.getFileType())) {
             return null;
         }
 
         Project project = location.getProject();
 
         ConfigurationFactory configurationFactory = JmeterConfigurationType.getInstance().getConfigurationFactory();
-        RunnerAndConfigurationSettings configurationSettings = RunManagerEx.getInstanceEx(project).createConfiguration(file.getNameWithoutExtension(), configurationFactory);
+        RunnerAndConfigurationSettings configurationSettings = RunManagerEx.getInstanceEx(project).createConfiguration(testFile.getNameWithoutExtension(), configurationFactory);
         JmeterRunConfiguration runConfiguration = (JmeterRunConfiguration) configurationSettings.getConfiguration();
-        runConfiguration.setTestFile(file.getPath());
+        runConfiguration.setTestFile(testFile.getPath());
+
+
+        VirtualFile propertyFile = testFile.getParent().findChild("jmeter.properties");
+        if (propertyFile != null) {
+            runConfiguration.setPropertyFile(propertyFile.getPath());
+        }
+
+
+        String customParameters = "";
+
+        VirtualFile systemPropertyFile = testFile.getParent().findChild("system.properties");
+        if (systemPropertyFile != null) {
+            customParameters += "--systemPropertyFile " + systemPropertyFile.getPath() + " ";
+        }
+
+        VirtualFile userPropertyFile = testFile.getParent().findChild("user.properties");
+        if (userPropertyFile != null) {
+            customParameters += "--addprop " + userPropertyFile.getPath() + " ";
+        }
+
+        VirtualFile testPropertyFile = testFile.getParent().findChild(testFile.getNameWithoutExtension() + ".properties");
+        if (testPropertyFile != null) {
+            customParameters += "--addprop " + testPropertyFile.getPath() + " ";
+        }
+
+        runConfiguration.setCustomParameters(customParameters.trim());
+
         return configurationSettings;
     }
 
