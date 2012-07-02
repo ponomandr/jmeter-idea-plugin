@@ -35,10 +35,12 @@ class JmeterRunProfileState extends JavaCommandLineState {
         }
 
         ParametersList programParameters = parameters.getProgramParametersList();
-        programParameters.add("-t", runConfiguration.getTestFile());
+        programParameters.add("--testfile", runConfiguration.getTestFile());
+
         if (!isBlank(runConfiguration.getPropertyFile())) {
-            programParameters.add("-p", runConfiguration.getPropertyFile());
+            programParameters.add("--addprop", runConfiguration.getPropertyFile());
         }
+
         for (Map.Entry<String, String> entry : runConfiguration.getProperties().entrySet()) {
             programParameters.add("-J", entry.getKey() + "=" + entry.getValue());
         }

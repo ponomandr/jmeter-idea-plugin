@@ -43,10 +43,33 @@ public class JmeterConfigurationProducer extends RuntimeConfigurationProducer {
         RunnerAndConfigurationSettings configurationSettings = RunManagerEx.getInstanceEx(project).createConfiguration(testFile.getNameWithoutExtension(), configurationFactory);
         JmeterRunConfiguration runConfiguration = (JmeterRunConfiguration) configurationSettings.getConfiguration();
         runConfiguration.setTestFile(testFile.getPath());
-        VirtualFile propertyFile = testFile.getParent().findChild(testFile.getNameWithoutExtension() + ".properties");
+
+
+        VirtualFile propertyFile = testFile.getParent().findChild("jmeter.properties");
         if (propertyFile != null) {
             runConfiguration.setPropertyFile(propertyFile.getPath());
         }
+
+
+        String customParameters = "";
+
+        VirtualFile systemPropertyFile = testFile.getParent().findChild("system.properties");
+        if (systemPropertyFile != null) {
+            customParameters += "--systemPropertyFile " + systemPropertyFile.getPath() + " ";
+        }
+
+        VirtualFile userPropertyFile = testFile.getParent().findChild("user.properties");
+        if (userPropertyFile != null) {
+            customParameters += "--addprop " + userPropertyFile.getPath() + " ";
+        }
+
+        VirtualFile testPropertyFile = testFile.getParent().findChild(testFile.getNameWithoutExtension() + ".properties");
+        if (testPropertyFile != null) {
+            customParameters += "--addprop " + testPropertyFile.getPath() + " ";
+        }
+
+        runConfiguration.setCustomParameters(customParameters.trim());
+
         return configurationSettings;
     }
 
