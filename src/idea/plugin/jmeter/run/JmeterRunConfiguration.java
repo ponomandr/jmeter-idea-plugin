@@ -53,7 +53,7 @@ public class JmeterRunConfiguration extends RunConfigurationBase implements Loca
         try {
             return new JmeterRunProfileState(executionEnvironment);
         } catch (IOException e) {
-            throw new ExecutionException(e);
+            throw new ExecutionException(e.getMessage(), e);
         }
     }
 
