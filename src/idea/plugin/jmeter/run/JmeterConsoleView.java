@@ -21,21 +21,26 @@ class JmeterConsoleView extends ConsoleViewImpl {
 
     @Override
     public void attachToProcess(ProcessHandler processHandler) {
-        super.attachToProcess(processHandler);
-
         final Tailer tailer = Tailer.create(logFile, new LogfileTailerListener(this));
 
         processHandler.addProcessListener(new ProcessAdapter() {
-
             @Override
             public void processWillTerminate(ProcessEvent event, boolean willBeDestroyed) {
                 // Give tailer a chance to finish its job
-//                try {
-//                    Thread.sleep(tailer.getDelay() * 3/2);
-//                } catch (InterruptedException e) {
-//                }
+                try {
+                    Thread.sleep(tailer.getDelay() * 3 / 2);
+                } catch (InterruptedException e) {
+                    // Do nothing
+                }
                 tailer.stop();
             }
         });
+
+        super.attachToProcess(processHandler);
+    }
+
+    @Override
+    public boolean canPause() {
+        return false;
     }
 }
