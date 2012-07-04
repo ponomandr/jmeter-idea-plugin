@@ -17,11 +17,12 @@ class JmeterConsoleView extends ConsoleViewImpl {
     public JmeterConsoleView(Project project, File logFile) {
         super(project, GlobalSearchScope.projectScope(project), false, null);
         this.logFile = logFile;
+
     }
 
     @Override
     public void attachToProcess(ProcessHandler processHandler) {
-        final Tailer tailer = Tailer.create(logFile, new LogfileTailerListener(this));
+        final Tailer tailer = Tailer.create(logFile, new LogfileTailerListener(this), 500);
 
         processHandler.addProcessListener(new ProcessAdapter() {
             @Override
