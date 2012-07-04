@@ -28,14 +28,13 @@ class RunJmeterGuiAction extends AnAction implements DumbAware {
 
     public void actionPerformed(AnActionEvent event) {
         Project project = event.getData(PlatformDataKeys.PROJECT);
+        Executor executor = DefaultRunExecutor.getRunExecutorInstance();
+        ProgramRunner runner = RunnerRegistry.getInstance().getRunner(executor.getId(), runConfiguration);
 
-        Executor myExecutor = DefaultRunExecutor.getRunExecutorInstance();
-        ProgramRunner runner = RunnerRegistry.getInstance().getRunner(myExecutor.getId(), runConfiguration);
         if (runner == null) {
             return;
         }
-
-        if (ExecutorRegistry.getInstance().isStarting(project, myExecutor.getId(), runner.getRunnerId())) {
+        if (ExecutorRegistry.getInstance().isStarting(project, executor.getId(), runner.getRunnerId())) {
             return;
         }
 
@@ -44,12 +43,12 @@ class RunJmeterGuiAction extends AnAction implements DumbAware {
 
         RunManagerImpl runManager = (RunManagerImpl) RunManager.getInstance(project);
         RunnerAndConfigurationSettings runnerAndConfiguration = new RunnerAndConfigurationSettingsImpl(runManager, guiRunConfiguration, false);
-        ExecutionEnvironment myEnvironment = new ExecutionEnvironment(runner, runnerAndConfiguration, project);
+        ExecutionEnvironment environment = new ExecutionEnvironment(runner, runnerAndConfiguration, project);
         try {
-            RunProfileState state = myEnvironment.getState(myExecutor);
+            RunProfileState state = environment.getState(executor);
             if (state instanceof CommandLineState) {
                 ((JmeterRunProfileState) state).setConsoleBuilder(null);
-                runner.execute(myExecutor, myEnvironment);
+                runner.execute(executor, environment);
             }
         } catch (RunCanceledByUserException ignore) {
         } catch (ExecutionException e1) {
