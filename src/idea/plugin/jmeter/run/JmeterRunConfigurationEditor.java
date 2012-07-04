@@ -23,6 +23,7 @@ public class JmeterRunConfigurationEditor extends SettingsEditor<JmeterRunConfig
         form.setProperties(runConfiguration.getProperties());
         form.setCustomParameters(runConfiguration.getCustomParameters());
         form.setWorkingDirectory(runConfiguration.getWorkingDirectory());
+        form.setNongui(runConfiguration.isNonguiMode());
     }
 
     @Override
@@ -32,6 +33,7 @@ public class JmeterRunConfigurationEditor extends SettingsEditor<JmeterRunConfig
         runConfiguration.setProperties(form.getProperties());
         runConfiguration.setCustomParameters(form.getCustomParameters());
         runConfiguration.setWorkingDirectory(form.getWorkingDirectory());
+        runConfiguration.setNonguiMode(form.getNongui());
     }
 
     @NotNull

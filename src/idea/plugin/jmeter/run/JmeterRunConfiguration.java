@@ -26,6 +26,7 @@ public class JmeterRunConfiguration extends RunConfigurationBase implements Loca
     private LinkedHashMap<String, String> properties = new LinkedHashMap<String, String>();
     private String customParameters;
     private String workingDirectory;
+    private boolean nonguiMode;
 
     public JmeterRunConfiguration(Project project, ConfigurationFactory configurationFactory) {
         super(project, configurationFactory, "");
@@ -67,12 +68,23 @@ public class JmeterRunConfiguration extends RunConfigurationBase implements Loca
     }
 
     @Override
+    public boolean isGeneratedName() {
+        return false;
+    }
+
+    @Override
+    public String suggestedName() {
+        return getName();
+    }
+
+    @Override
     public void writeExternal(Element element) throws WriteExternalException {
         super.writeExternal(element);
         JDOMExternalizer.write(element, "testFile", testFile);
         JDOMExternalizer.write(element, "propertyFile", propertyFile);
         JDOMExternalizer.write(element, "customParameters", customParameters);
         JDOMExternalizer.write(element, "workingDirectory", workingDirectory);
+        JDOMExternalizer.write(element, "nonguiMode", nonguiMode);
         JDOMExternalizer.writeMap(element, properties, "properties", "property");
     }
 
@@ -83,6 +95,7 @@ public class JmeterRunConfiguration extends RunConfigurationBase implements Loca
         propertyFile = JDOMExternalizer.readString(element, "propertyFile");
         customParameters = JDOMExternalizer.readString(element, "customParameters");
         workingDirectory = JDOMExternalizer.readString(element, "workingDirectory");
+        nonguiMode = JDOMExternalizer.readBoolean(element, "nonguiMode");
 
         LinkedHashMap<String, String> properties = this.properties;
         JDOMExternalizer.readMap(element, properties, "properties", "property");
@@ -129,13 +142,12 @@ public class JmeterRunConfiguration extends RunConfigurationBase implements Loca
         this.workingDirectory = workingDirectory;
     }
 
-    @Override
-    public boolean isGeneratedName() {
-        return false;
+    public boolean isNonguiMode() {
+        return nonguiMode;
     }
 
-    @Override
-    public String suggestedName() {
-        return getName();
+    public void setNonguiMode(boolean nonguiMode) {
+        this.nonguiMode = nonguiMode;
     }
+
 }

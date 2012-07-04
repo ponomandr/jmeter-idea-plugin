@@ -4,7 +4,7 @@ import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.JavaCommandLineState;
 import com.intellij.execution.configurations.JavaParameters;
 import com.intellij.execution.configurations.ParametersList;
-import com.intellij.execution.filters.TextConsoleBuilderImpl;
+import com.intellij.execution.filters.TextConsoleBuilderFactory;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.openapi.projectRoots.impl.JavaAwareProjectJdkTableImpl;
 import idea.plugin.jmeter.settings.JmeterSettings;
@@ -21,7 +21,7 @@ class JmeterRunProfileState extends JavaCommandLineState {
         super(executionEnvironment);
         this.runConfiguration = (JmeterRunConfiguration) executionEnvironment.getRunProfile();
         this.executionEnvironment = executionEnvironment;
-        setConsoleBuilder(new TextConsoleBuilderImpl(executionEnvironment.getProject()));
+        setConsoleBuilder(TextConsoleBuilderFactory.getInstance().createBuilder(executionEnvironment.getProject()));
     }
 
     @Override
@@ -45,6 +45,11 @@ class JmeterRunProfileState extends JavaCommandLineState {
             programParameters.add("-J", entry.getKey() + "=" + entry.getValue());
         }
         programParameters.addParametersString(runConfiguration.getCustomParameters());
+
+        if (runConfiguration.isNonguiMode()) {
+            programParameters.add("--nongui");
+        }
+
         return parameters;
     }
 }

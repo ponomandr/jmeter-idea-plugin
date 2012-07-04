@@ -19,6 +19,7 @@ public class JmeterRunConfigurationForm {
     private PropertyTable propertyTable;
     private JTextField customParameters;
     private TextFieldWithBrowseButton workingDirectory;
+    private JCheckBox nongui;
 
     public JmeterRunConfigurationForm(final Project project) {
         testFile.addActionListener(new ActionListener() {
@@ -94,5 +95,13 @@ public class JmeterRunConfigurationForm {
 
     public void setWorkingDirectory(String workingDirectory) {
         this.workingDirectory.setText(workingDirectory);
+    }
+
+    public boolean getNongui() {
+        return nongui.isSelected();
+    }
+
+    public void setNongui(boolean nongui) {
+        this.nongui.setSelected(nongui);
     }
 }
