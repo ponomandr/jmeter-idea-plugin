@@ -83,6 +83,13 @@ public class JmeterRunConfiguration extends RunConfigurationBase implements Loca
     }
 
     @Override
+    public JmeterRunConfiguration clone() {
+        JmeterRunConfiguration cloned = (JmeterRunConfiguration) super.clone();
+        cloned.properties = new LinkedHashMap<String, String>(properties);
+        return cloned;
+    }
+
+    @Override
     public void writeExternal(Element element) throws WriteExternalException {
         super.writeExternal(element);
         JDOMExternalizer.write(element, "testFile", testFile);
