@@ -1,17 +1,14 @@
 package idea.plugin.jmeter.run;
 
 import com.intellij.execution.ExecutionException;
-import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.JavaCommandLineState;
 import com.intellij.execution.configurations.JavaParameters;
 import com.intellij.execution.configurations.ParametersList;
-import com.intellij.execution.filters.TextConsoleBuilderFactory;
+import com.intellij.execution.filters.TextConsoleBuilderImpl;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.ui.ConsoleView;
 import com.intellij.openapi.projectRoots.impl.JavaAwareProjectJdkTableImpl;
-import idea.plugin.jmeter.run.tailer.Tailer;
 import idea.plugin.jmeter.settings.JmeterSettings;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,17 +26,13 @@ class JmeterRunProfileState extends JavaCommandLineState {
         this.runConfiguration = (JmeterRunConfiguration) executionEnvironment.getRunProfile();
         this.executionEnvironment = executionEnvironment;
         logFile = File.createTempFile("jmeter", ".jtl");
-        setConsoleBuilder(TextConsoleBuilderFactory.getInstance().createBuilder(executionEnvironment.getProject()));
-    }
 
-    @Override
-    protected ConsoleView createConsole(@NotNull Executor executor) throws ExecutionException {
-        final ConsoleView console = super.createConsole(executor);
-        if (console != null) {
-            Tailer.create(logFile, new LogfileTailerListener(console));
-
-        }
-        return console;
+        setConsoleBuilder(new TextConsoleBuilderImpl(executionEnvironment.getProject()) {
+            @Override
+            protected ConsoleView createConsole() {
+                return new JmeterConsoleView(getProject(), logFile);
+            }
+        });
     }
 
     @Override

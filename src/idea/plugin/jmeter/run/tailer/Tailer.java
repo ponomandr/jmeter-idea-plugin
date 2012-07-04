@@ -413,10 +413,14 @@ public class Tailer implements Runnable {
                 if (reOpen) {
                     closeQuietly(reader);
                 }
-                try {
-                    Thread.sleep(delayMillis);
-                } catch (InterruptedException e) {
+
+                if (run) {
+                    try {
+                        Thread.sleep(delayMillis);
+                    } catch (InterruptedException e) {
+                    }
                 }
+
                 if (run && reOpen) {
                     reader = new RandomAccessFile(file, RAF_MODE);
                     reader.seek(position);
