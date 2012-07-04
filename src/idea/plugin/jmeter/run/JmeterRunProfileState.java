@@ -8,10 +8,8 @@ import com.intellij.execution.configurations.ParametersList;
 import com.intellij.execution.filters.TextConsoleBuilderFactory;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.ui.ConsoleView;
-import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.projectRoots.impl.JavaAwareProjectJdkTableImpl;
 import idea.plugin.jmeter.run.tailer.Tailer;
-import idea.plugin.jmeter.run.tailer.TailerListenerAdapter;
 import idea.plugin.jmeter.settings.JmeterSettings;
 import org.jetbrains.annotations.NotNull;
 
@@ -38,17 +36,7 @@ class JmeterRunProfileState extends JavaCommandLineState {
     protected ConsoleView createConsole(@NotNull Executor executor) throws ExecutionException {
         final ConsoleView console = super.createConsole(executor);
         if (console != null) {
-            Tailer.create(logFile, new TailerListenerAdapter() {
-                @Override
-                public void handle(String line) {
-                    console.print(line + '\n', ConsoleViewContentType.NORMAL_OUTPUT);
-                }
-
-                @Override
-                public void handle(Exception ex) {
-                    console.print(ex.toString(), ConsoleViewContentType.ERROR_OUTPUT);
-                }
-            });
+            Tailer.create(logFile, new LogfileTailerListener(console));
 
         }
         return console;
@@ -86,4 +74,5 @@ class JmeterRunProfileState extends JavaCommandLineState {
 
         return parameters;
     }
+
 }
