@@ -14,10 +14,10 @@ class JmeterConsoleView extends ConsoleViewImpl {
 
     private final File logFile;
 
-    public JmeterConsoleView(Project project, File logFile) {
+    public JmeterConsoleView(Project project, File logFile, JmeterRunConfiguration runConfiguration) {
         super(project, GlobalSearchScope.projectScope(project), false, null);
         this.logFile = logFile;
-
+        addCustomConsoleAction(new RunJmeterGuiAction(runConfiguration));
     }
 
     @Override
@@ -44,4 +44,5 @@ class JmeterConsoleView extends ConsoleViewImpl {
     public boolean canPause() {
         return false;
     }
+
 }

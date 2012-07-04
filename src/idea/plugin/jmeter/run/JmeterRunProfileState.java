@@ -30,7 +30,7 @@ class JmeterRunProfileState extends JavaCommandLineState {
         setConsoleBuilder(new TextConsoleBuilderImpl(executionEnvironment.getProject()) {
             @Override
             protected ConsoleView createConsole() {
-                return new JmeterConsoleView(getProject(), logFile);
+                return new JmeterConsoleView(getProject(), logFile, runConfiguration);
             }
         });
     }
