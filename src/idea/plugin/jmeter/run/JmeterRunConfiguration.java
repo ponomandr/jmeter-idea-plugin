@@ -16,6 +16,7 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.LinkedHashMap;
 
 import static org.apache.commons.lang.StringUtils.isBlank;
@@ -49,7 +50,11 @@ public class JmeterRunConfiguration extends RunConfigurationBase implements Loca
 
     @Override
     public RunProfileState getState(@NotNull Executor executor, @NotNull ExecutionEnvironment executionEnvironment) throws ExecutionException {
-        return new JmeterRunProfileState(executionEnvironment);
+        try {
+            return new JmeterRunProfileState(executionEnvironment);
+        } catch (IOException e) {
+            throw new ExecutionException(e);
+        }
     }
 
     @Override
