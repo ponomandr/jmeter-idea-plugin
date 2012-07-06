@@ -18,19 +18,25 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
 import java.io.File;
 
 class JmeterConsoleView extends JSplitPane implements ConsoleView, DataProvider {
     private final ConsoleViewImpl console;
     private final File logFile;
+    private final JTree testTree;
+    private final DefaultMutableTreeNode root;
 
     public JmeterConsoleView(Project project, File logFile, JmeterRunConfiguration runConfiguration) {
         super(JSplitPane.HORIZONTAL_SPLIT);
         console = new ConsoleViewImpl(project, GlobalSearchScope.projectScope(project), false, null);
         this.logFile = logFile;
         console.addCustomConsoleAction(new RunJmeterGuiAction(runConfiguration));
-
-        add(new JLabel("test"));
+        root = new DefaultMutableTreeNode("root");
+        root.setAllowsChildren(true);
+        root.add(new DefaultMutableTreeNode("test"));
+        testTree = new JTree(root);
+        add(new JScrollPane(testTree));
         add(console);
         setDividerLocation(400);
     }
@@ -43,6 +49,7 @@ class JmeterConsoleView extends JSplitPane implements ConsoleView, DataProvider 
     @Override
     public void clear() {
         console.clear();
+        testTree.removeAll();
     }
 
     @Override
@@ -148,5 +155,10 @@ class JmeterConsoleView extends JSplitPane implements ConsoleView, DataProvider 
             return this;
         }
         return null;
+    }
+
+    public void addTestOk(String sampleName) {
+        root.add(new DefaultMutableTreeNode("test " + sampleName));
+        System.err.println("dddddddddddddddd");
     }
 }

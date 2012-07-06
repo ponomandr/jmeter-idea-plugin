@@ -1,6 +1,5 @@
 package idea.plugin.jmeter.run;
 
-import com.intellij.execution.ui.ConsoleView;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import idea.plugin.jmeter.run.tailer.TailerListenerAdapter;
 
@@ -11,7 +10,7 @@ class LogfileTailerListener extends TailerListenerAdapter {
 
     private enum State {inTestResults, inSample, inAssertion}
 
-    private final ConsoleView console;
+    private final JmeterConsoleView console;
 
     private State state = State.inTestResults;
     private String sampleName;
@@ -19,7 +18,7 @@ class LogfileTailerListener extends TailerListenerAdapter {
     private List<Assertion> failedAssertions;
 
 
-    public LogfileTailerListener(ConsoleView console) {
+    public LogfileTailerListener(JmeterConsoleView console) {
         this.console = console;
     }
 
@@ -63,7 +62,7 @@ class LogfileTailerListener extends TailerListenerAdapter {
 
     private void printSampleResult() {
         if (failedAssertions.isEmpty()) {
-            console.print(sampleName + " - OK\n", ConsoleViewContentType.USER_INPUT);
+            console.addTestOk(sampleName);
         } else {
             console.print(sampleName + " - FAILED\n", ConsoleViewContentType.ERROR_OUTPUT);
             for (Assertion assertion : failedAssertions) {
