@@ -22,6 +22,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import java.io.File;
+import java.util.List;
 
 class JmeterConsoleView extends JSplitPane implements ConsoleView, DataProvider {
     private final ConsoleViewImpl console;
@@ -166,6 +167,24 @@ class JmeterConsoleView extends JSplitPane implements ConsoleView, DataProvider 
             @Override
             public void run() {
                 treeModel.insertNodeInto(new DefaultMutableTreeNode(sampleName + " - OK"), root, root.getChildCount());
+                treeModel.nodeStructureChanged(root);
+            }
+        });
+    }
+
+    public void addTestFailed(final String sampleName, final List<Assertion> failedAssertions) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                DefaultMutableTreeNode testNode = new DefaultMutableTreeNode(sampleName + " - FAILED");
+                treeModel.insertNodeInto(testNode, root, root.getChildCount());
+                for (Assertion assertion : failedAssertions) {
+                    String type = (assertion.isError() ? "ERROR" : "FAILURE");
+                    DefaultMutableTreeNode assertionNode = new DefaultMutableTreeNode(assertion.getName() + " - " + type);
+                    treeModel.insertNodeInto(assertionNode, testNode, testNode.getChildCount());
+                }
+
+
                 treeModel.nodeStructureChanged(root);
             }
         });

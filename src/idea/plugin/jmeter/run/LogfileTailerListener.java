@@ -36,20 +36,20 @@ class LogfileTailerListener extends TailerListenerAdapter {
         }
 
         if (state == State.inAssertion && line.contains("<name>")) {
-            assertion.name = extractAssertionName(line);
+            assertion.setName(extractAssertionName(line));
         }
 
         if (state == State.inAssertion && line.contains("<failure>")) {
-            assertion.failure = extractAssertionFailure(line);
+            assertion.setFailure(extractAssertionFailure(line));
         }
 
         if (state == State.inAssertion && line.contains("<error>")) {
-            assertion.error = extractAssertionError(line);
+            assertion.setError(extractAssertionError(line));
         }
 
         if (state == State.inAssertion && line.contains("</assertionResult>")) {
             state = State.inSample;
-            if (assertion.error || assertion.failure) {
+            if (assertion.isError() || assertion.isFailure()) {
                 failedAssertions.add(assertion);
             }
         }
@@ -64,11 +64,7 @@ class LogfileTailerListener extends TailerListenerAdapter {
         if (failedAssertions.isEmpty()) {
             console.addTestOk(sampleName);
         } else {
-            console.print(sampleName + " - FAILED\n", ConsoleViewContentType.ERROR_OUTPUT);
-            for (Assertion assertion : failedAssertions) {
-                String type = (assertion.error ? "ERROR" : "FAILURE");
-                console.print("    " + assertion.name + " - " + type + "\n", ConsoleViewContentType.ERROR_OUTPUT);
-            }
+            console.addTestFailed(sampleName, failedAssertions);
         }
     }
 
@@ -102,9 +98,4 @@ class LogfileTailerListener extends TailerListenerAdapter {
         return line.substring(start, end);
     }
 
-    private static class Assertion {
-        String name;
-        boolean failure;
-        boolean error;
-    }
 }
