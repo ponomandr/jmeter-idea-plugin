@@ -8,6 +8,8 @@ import idea.plugin.jmeter.run.tailer.TailerListenerAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.apache.commons.lang.StringEscapeUtils.unescapeXml;
+
 class LogfileTailerListener extends TailerListenerAdapter {
 
     private enum State {inTestResults, inSample, inAssertion}
@@ -83,7 +85,7 @@ class LogfileTailerListener extends TailerListenerAdapter {
     private String extractAttribute(String line, String name) {
         int start = line.indexOf(name + "=\"") + (name + "=\"").length();
         int end = line.indexOf('"', start + 1);
-        return line.substring(start, end);
+        return unescapeXml(line.substring(start, end));
     }
 
     private String extractAssertionName(String line) {
@@ -102,7 +104,7 @@ class LogfileTailerListener extends TailerListenerAdapter {
         String tag = "<" + name + ">";
         int start = line.indexOf(tag) + tag.length();
         int end = line.indexOf("</" + name + ">", start + 1);
-        return line.substring(start, end);
+        return unescapeXml(line.substring(start, end));
     }
 
 /*
