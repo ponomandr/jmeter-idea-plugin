@@ -54,7 +54,8 @@ class JmeterConsoleView extends JSplitPane implements ConsoleView, DataProvider 
     @Override
     public void clear() {
         console.clear();
-        testTree.removeAll();
+        root.removeAllChildren();
+        treeModel.nodeStructureChanged(root);
     }
 
     @Override
@@ -183,7 +184,6 @@ class JmeterConsoleView extends JSplitPane implements ConsoleView, DataProvider 
                     DefaultMutableTreeNode assertionNode = new DefaultMutableTreeNode(assertion.getName() + " - " + type);
                     treeModel.insertNodeInto(assertionNode, testNode, testNode.getChildCount());
                 }
-
 
                 treeModel.nodeStructureChanged(root);
             }
