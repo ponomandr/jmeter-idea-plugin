@@ -136,6 +136,6 @@ public class JmeterConsoleView extends JSplitPane implements ConsoleView, DataPr
     }
 
     public void onSampleResultSelected(SampleResult sampleResult) {
-        textArea.setText(sampleResult.getName());
+        textArea.setText(sampleResult.getSamplerData() + "\n\n" + sampleResult.getResponseData());
     }
 }

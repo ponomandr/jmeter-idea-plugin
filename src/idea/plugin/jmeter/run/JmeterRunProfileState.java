@@ -63,6 +63,9 @@ class JmeterRunProfileState extends JavaCommandLineState {
         if (runConfiguration.isNonguiMode()) {
             programParameters.add("--logfile", logFile.getAbsolutePath());
             programParameters.add("--nongui");
+            programParameters.add("-J", "jmeter.save.saveservice.assertions=true");
+            programParameters.add("-J", "jmeter.save.saveservice.samplerData=true");
+            programParameters.add("-J", "jmeter.save.saveservice.response_data=true");
         }
 
         return parameters;

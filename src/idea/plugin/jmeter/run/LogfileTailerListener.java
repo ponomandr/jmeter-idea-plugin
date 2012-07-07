@@ -1,5 +1,6 @@
 package idea.plugin.jmeter.run;
 
+import com.google.common.base.Preconditions;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import idea.plugin.jmeter.domain.Assertion;
 import idea.plugin.jmeter.domain.SampleResult;
@@ -18,6 +19,8 @@ class LogfileTailerListener extends TailerListenerAdapter {
 
     private State state = State.inTestResults;
     private String sampleName;
+    private String samplerData;
+    private String responseData;
     private Assertion assertion;
     private List<Assertion> assertions;
 
@@ -28,10 +31,13 @@ class LogfileTailerListener extends TailerListenerAdapter {
 
     @Override
     public void handle(String line) {
+        System.out.println(line);
         String trim = line.trim();
         if (state == State.inTestResults && (trim.startsWith("<sample") || trim.startsWith("<httpSample"))) {
             state = State.inSample;
             sampleName = extractAttribute(line, "lb");
+            samplerData = null;
+            responseData = null;
             assertions = new ArrayList<Assertion>();
             assertion = new Assertion();
 
@@ -43,6 +49,14 @@ class LogfileTailerListener extends TailerListenerAdapter {
 
         if (state == State.inSample && line.contains("<assertionResult>")) {
             state = State.inAssertion;
+        }
+
+        if (state == State.inSample && line.contains("<samplerData")) {
+            samplerData = extractTagBody(line, "samplerData");
+        }
+
+        if (state == State.inSample && line.contains("<responseData")) {
+            responseData = extractTagBody(line, "responseData");
         }
 
         if (state == State.inAssertion && line.contains("<name>")) {
@@ -73,7 +87,7 @@ class LogfileTailerListener extends TailerListenerAdapter {
     }
 
     private void printSampleResult() {
-        SampleResult sampleResult = new SampleResult(sampleName, assertions);
+        SampleResult sampleResult = new SampleResult(sampleName, samplerData, responseData, assertions);
         console.addSampleResult(sampleResult);
     }
 
@@ -101,10 +115,16 @@ class LogfileTailerListener extends TailerListenerAdapter {
     }
 
     private String extractTagBody(String line, String name) {
-        String tag = "<" + name + ">";
+        String tag = "<" + name;
         int start = line.indexOf(tag) + tag.length();
-        int end = line.indexOf("</" + name + ">", start + 1);
-        return unescapeXml(line.substring(start, end));
+        Preconditions.checkState(start >= 0);
+        start = line.indexOf('>', start);
+        Preconditions.checkState(start > 0);
+        if (line.charAt(start - 1) == '/') {
+            return "";
+        }
+        int end = line.indexOf("</" + name + ">", start);
+        return unescapeXml(line.substring(start + 1, end));
     }
 
 /*
