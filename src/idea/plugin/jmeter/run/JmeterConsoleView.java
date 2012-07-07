@@ -19,7 +19,8 @@ import java.io.File;
 public class JmeterConsoleView extends JSplitPane implements ConsoleView, DataProvider {
     private final File logFile;
     private final JmeterTreeView treeView;
-    private final JTextArea textArea;
+    private final JTextArea samplerData;
+    private final JTextArea responseData;
 
     public JmeterConsoleView(File logFile) {
         super(JSplitPane.HORIZONTAL_SPLIT);
@@ -29,8 +30,14 @@ public class JmeterConsoleView extends JSplitPane implements ConsoleView, DataPr
 
         treeView = new JmeterTreeView(this);
         add(new JScrollPane(treeView));
-        textArea = new JTextArea();
-        add(textArea);
+
+        samplerData = new JTextArea();
+        responseData = new JTextArea();
+        JTabbedPane tabbedPane = new JTabbedPane();
+        tabbedPane.add("Request", samplerData);
+        tabbedPane.add("Response Data", responseData);
+        add(tabbedPane);
+
         setDividerLocation(500);
     }
 
@@ -40,7 +47,8 @@ public class JmeterConsoleView extends JSplitPane implements ConsoleView, DataPr
 
     @Override
     public void clear() {
-        textArea.setText("");
+        samplerData.setText("");
+        responseData.setText("");
         treeView.clear();
     }
 
@@ -110,7 +118,7 @@ public class JmeterConsoleView extends JSplitPane implements ConsoleView, DataPr
 
     @Override
     public JComponent getPreferredFocusableComponent() {
-        return textArea;
+        return samplerData;
     }
 
     @Override
@@ -132,10 +140,12 @@ public class JmeterConsoleView extends JSplitPane implements ConsoleView, DataPr
     }
 
     public void onAssertionSelected(Assertion assertion) {
-        textArea.setText(assertion.getFailureMessage());
+        samplerData.setText(assertion.getFailureMessage());
+        responseData.setText("");
     }
 
     public void onSampleResultSelected(SampleResult sampleResult) {
-        textArea.setText(sampleResult.getSamplerData() + "\n\n" + sampleResult.getResponseData());
+        samplerData.setText(sampleResult.getSamplerData());
+        responseData.setText(sampleResult.getResponseData());
     }
 }
