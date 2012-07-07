@@ -12,6 +12,7 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.IconLoader;
 import com.intellij.psi.search.GlobalSearchScope;
 import idea.plugin.jmeter.run.tailer.Tailer;
 import org.jetbrains.annotations.NonNls;
@@ -19,8 +20,10 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
+import java.awt.*;
 import java.io.File;
 import java.util.List;
 
@@ -41,6 +44,7 @@ class JmeterConsoleView extends JSplitPane implements ConsoleView, DataProvider 
         testTree = new JTree(treeModel);
         testTree.expandPath(new TreePath(root));
         testTree.setRootVisible(false);
+        testTree.setCellRenderer(new CustomIconRenderer());
         add(new JScrollPane(testTree));
         add(console);
         setDividerLocation(400);
@@ -167,7 +171,9 @@ class JmeterConsoleView extends JSplitPane implements ConsoleView, DataProvider 
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                treeModel.insertNodeInto(new DefaultMutableTreeNode(sampleName + " - OK"), root, root.getChildCount());
+//                PoolOfTestIcons.PASSED_ICON
+                DefaultMutableTreeNode node = new DefaultMutableTreeNode(new TestResult(sampleName, TestState.ok));
+                treeModel.insertNodeInto(node, root, root.getChildCount());
                 treeModel.nodeStructureChanged(root);
             }
         });
@@ -177,16 +183,70 @@ class JmeterConsoleView extends JSplitPane implements ConsoleView, DataProvider 
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                DefaultMutableTreeNode testNode = new DefaultMutableTreeNode(sampleName + " - FAILED");
+                DefaultMutableTreeNode testNode = new DefaultMutableTreeNode(new TestResult(sampleName, TestState.failed));
                 treeModel.insertNodeInto(testNode, root, root.getChildCount());
                 for (Assertion assertion : failedAssertions) {
-                    String type = (assertion.isError() ? "ERROR" : "FAILURE");
-                    DefaultMutableTreeNode assertionNode = new DefaultMutableTreeNode(assertion.getName() + " - " + type);
+                    TestState type = assertion.isError() ? TestState.error : TestState.failed;
+                    DefaultMutableTreeNode assertionNode = new DefaultMutableTreeNode(new TestResult(assertion.getName(), type));
                     treeModel.insertNodeInto(assertionNode, testNode, testNode.getChildCount());
                 }
-
                 treeModel.nodeStructureChanged(root);
             }
         });
+    }
+
+    static class CustomIconRenderer extends DefaultTreeCellRenderer {
+        private static final Icon success = IconLoader.getIcon("/icons/icon_success_sml.gif");
+        private static final Icon warning = IconLoader.getIcon("/icons/icon_warning_sml.gif");
+        private static final Icon error = IconLoader.getIcon("/icons/icon_error_sml.gif");
+
+        public Component getTreeCellRendererComponent(JTree tree,
+                                                      Object value, boolean sel, boolean expanded, boolean leaf,
+                                                      int row, boolean hasFocus) {
+
+            super.getTreeCellRendererComponent(tree, value, sel,
+                    expanded, leaf, row, hasFocus);
+
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
+            Object userObject = node.getUserObject();
+            if (userObject instanceof TestResult) {
+                TestResult testResult = (TestResult) userObject;
+                setText(testResult.getSampleName());
+                switch (testResult.getTestState()) {
+                    case ok:
+                        setIcon(success);
+                        break;
+                    case failed:
+                        setIcon(warning);
+                        break;
+                    case error:
+                        setIcon(error);
+                        break;
+                }
+            }
+            return this;
+        }
+    }
+
+    public enum TestState {
+        ok, failed, error
+    }
+
+    public static class TestResult {
+        private final String sampleName;
+        private final TestState testState;
+
+        public TestResult(String sampleName, TestState testState) {
+            this.sampleName = sampleName;
+            this.testState = testState;
+        }
+
+        public String getSampleName() {
+            return sampleName;
+        }
+
+        public TestState getTestState() {
+            return testState;
+        }
     }
 }
