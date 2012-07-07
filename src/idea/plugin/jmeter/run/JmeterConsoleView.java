@@ -19,6 +19,8 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 import java.io.File;
 
 class JmeterConsoleView extends JSplitPane implements ConsoleView, DataProvider {
@@ -26,6 +28,7 @@ class JmeterConsoleView extends JSplitPane implements ConsoleView, DataProvider 
     private final File logFile;
     private final JTree testTree;
     private final DefaultMutableTreeNode root;
+    private final DefaultTreeModel treeModel;
 
     public JmeterConsoleView(Project project, File logFile, JmeterRunConfiguration runConfiguration) {
         super(JSplitPane.HORIZONTAL_SPLIT);
@@ -33,9 +36,10 @@ class JmeterConsoleView extends JSplitPane implements ConsoleView, DataProvider 
         this.logFile = logFile;
         console.addCustomConsoleAction(new RunJmeterGuiAction(runConfiguration));
         root = new DefaultMutableTreeNode("root");
-        root.setAllowsChildren(true);
-        root.add(new DefaultMutableTreeNode("test"));
-        testTree = new JTree(root);
+        treeModel = new DefaultTreeModel(root);
+        testTree = new JTree(treeModel);
+        testTree.expandPath(new TreePath(root));
+        testTree.setRootVisible(false);
         add(new JScrollPane(testTree));
         add(console);
         setDividerLocation(400);
@@ -157,8 +161,13 @@ class JmeterConsoleView extends JSplitPane implements ConsoleView, DataProvider 
         return null;
     }
 
-    public void addTestOk(String sampleName) {
-        root.add(new DefaultMutableTreeNode("test " + sampleName));
-        System.err.println("dddddddddddddddd");
+    public void addTestOk(final String sampleName) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                treeModel.insertNodeInto(new DefaultMutableTreeNode(sampleName + " - OK"), root, root.getChildCount());
+                treeModel.nodeStructureChanged(root);
+            }
+        });
     }
 }
