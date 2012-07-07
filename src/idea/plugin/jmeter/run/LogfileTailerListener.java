@@ -26,11 +26,17 @@ class LogfileTailerListener extends TailerListenerAdapter {
 
     @Override
     public void handle(String line) {
-        if (state == State.inTestResults && line.contains("lb=")) {
+        String trim = line.trim();
+        if (state == State.inTestResults && (trim.startsWith("<sample") || trim.startsWith("<httpSample"))) {
             state = State.inSample;
-            sampleName = extractSampleName(line);
+            sampleName = extractAttribute(line, "lb");
             assertions = new ArrayList<Assertion>();
             assertion = new Assertion();
+
+            if (trim.endsWith("/>")) {
+                state = State.inTestResults;
+                printSampleResult();
+            }
         }
 
         if (state == State.inSample && line.contains("<assertionResult>")) {
@@ -58,7 +64,7 @@ class LogfileTailerListener extends TailerListenerAdapter {
             assertions.add(assertion);
         }
 
-        if (state == State.inSample && line.contains("</")) {
+        if (state == State.inSample && (line.contains("</sample>") || line.contains("</httpSample>"))) {
             state = State.inTestResults;
             printSampleResult();
         }
@@ -74,8 +80,8 @@ class LogfileTailerListener extends TailerListenerAdapter {
         console.print(ex.toString(), ConsoleViewContentType.ERROR_OUTPUT);
     }
 
-    private String extractSampleName(String line) {
-        int start = line.indexOf("lb=\"") + "lb=\"".length();
+    private String extractAttribute(String line, String name) {
+        int start = line.indexOf(name + "=\"") + (name + "=\"").length();
         int end = line.indexOf('"', start + 1);
         return line.substring(start, end);
     }
@@ -98,5 +104,30 @@ class LogfileTailerListener extends TailerListenerAdapter {
         int end = line.indexOf("</" + name + ">", start + 1);
         return line.substring(start, end);
     }
+
+/*
+        writer.addAttribute("t", Long.toString(res.getTime()));
+        writer.addAttribute("it", Long.toString(res.getIdleTime()));
+        writer.addAttribute("lt", Long.toString(res.getLatency()));
+        writer.addAttribute("ts", Long.toString(res.getTimeStamp()));
+        writer.addAttribute("s", Boolean.toString(res.isSuccessful()));
+        writer.addAttribute("lb", ConversionHelp.encode(res.getSampleLabel()));
+        writer.addAttribute("rc", ConversionHelp.encode(res.getResponseCode()));
+        writer.addAttribute("rm", ConversionHelp.encode(res.getResponseMessage()));
+        writer.addAttribute("tn", ConversionHelp.encode(res.getThreadName()));
+        writer.addAttribute("dt", ConversionHelp.encode(res.getDataType()));
+        writer.addAttribute("de", ConversionHelp.encode(res.getDataEncodingNoDefault()));
+        writer.addAttribute("by", String.valueOf(res.getBytes()));
+        writer.addAttribute("sc", String.valueOf(res.getSampleCount()));
+        writer.addAttribute("ec", String.valueOf(res.getErrorCount()));
+        writer.addAttribute("ng", String.valueOf(res.getGroupThreads()));
+        writer.addAttribute("na", String.valueOf(res.getAllThreads()));
+        writer.addAttribute("hn", event.getHostname());
+
+        for (int i = 0; i < SampleEvent.getVarCount(); i++){
+            writer.addAttribute(SampleEvent.getVarName(i), ConversionHelp.encode(event.getVarValue(i)));
+        }
+    }
+*/
 
 }
