@@ -3,8 +3,6 @@ package idea.plugin.jmeter.run;
 import com.intellij.execution.filters.Filter;
 import com.intellij.execution.filters.HyperlinkInfo;
 import com.intellij.execution.impl.ConsoleViewImpl;
-import com.intellij.execution.process.ProcessAdapter;
-import com.intellij.execution.process.ProcessEvent;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.ui.ConsoleView;
 import com.intellij.execution.ui.ConsoleViewContentType;
@@ -14,7 +12,6 @@ import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.psi.search.GlobalSearchScope;
-import idea.plugin.jmeter.run.tailer.Tailer;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,7 +27,6 @@ import java.util.List;
 class JmeterConsoleView extends JSplitPane implements ConsoleView, DataProvider {
     private final ConsoleViewImpl console;
     private final File logFile;
-    private final JTree testTree;
     private final DefaultMutableTreeNode root;
     private final DefaultTreeModel treeModel;
 
@@ -41,13 +37,13 @@ class JmeterConsoleView extends JSplitPane implements ConsoleView, DataProvider 
         console.addCustomConsoleAction(new RunJmeterGuiAction(runConfiguration));
         root = new DefaultMutableTreeNode("root");
         treeModel = new DefaultTreeModel(root);
-        testTree = new JTree(treeModel);
+        JTree testTree = new JTree(treeModel);
         testTree.expandPath(new TreePath(root));
         testTree.setRootVisible(false);
         testTree.setCellRenderer(new CustomIconRenderer());
         add(new JScrollPane(testTree));
         add(console);
-        setDividerLocation(400);
+        setDividerLocation(500);
     }
 
     @Override
@@ -69,17 +65,7 @@ class JmeterConsoleView extends JSplitPane implements ConsoleView, DataProvider 
 
     @Override
     public void attachToProcess(ProcessHandler processHandler) {
-        final Tailer tailer = Tailer.create(logFile, new LogfileTailerListener(this), 500);
-
-        processHandler.addProcessListener(new ProcessAdapter() {
-            @Override
-            public void processWillTerminate(ProcessEvent event, boolean willBeDestroyed) {
-                // Give tailer a chance to finish its job
-                sleep(tailer.getDelay() * 3 / 2);
-                tailer.stop();
-            }
-        });
-
+        processHandler.addProcessListener(new JmeterProcessListener(this, logFile));
         console.attachToProcess(processHandler);
     }
 
@@ -152,13 +138,6 @@ class JmeterConsoleView extends JSplitPane implements ConsoleView, DataProvider 
         console.dispose();
     }
 
-    private void sleep(long millis) {
-        try {
-            Thread.sleep(millis);
-        } catch (InterruptedException ignored) {
-        }
-    }
-
     @Override
     public Object getData(@NonNls String dataId) {
         if (LangDataKeys.CONSOLE_VIEW.is(dataId)) {
@@ -171,7 +150,6 @@ class JmeterConsoleView extends JSplitPane implements ConsoleView, DataProvider 
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-//                PoolOfTestIcons.PASSED_ICON
                 DefaultMutableTreeNode node = new DefaultMutableTreeNode(new TestResult(sampleName, TestState.ok));
                 treeModel.insertNodeInto(node, root, root.getChildCount());
                 treeModel.nodeStructureChanged(root);
@@ -249,4 +227,5 @@ class JmeterConsoleView extends JSplitPane implements ConsoleView, DataProvider 
             return testState;
         }
     }
+
 }
