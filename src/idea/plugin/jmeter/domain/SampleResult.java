@@ -2,33 +2,48 @@ package idea.plugin.jmeter.domain;
 
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SampleResult {
-    private final String name;
-    private final String samplerData;
-    private final String responseData;
-    private final List<Assertion> assertions;
+    private String name;
+    private String samplerData;
+    private String responseData;
+    private List<Assertion> assertions = new ArrayList<Assertion>();
+
+    public SampleResult() {
+    }
 
     public SampleResult(String sampleName, @Nullable String samplerData, @Nullable String responseData, List<Assertion> assertions) {
         this.name = sampleName;
         this.samplerData = samplerData;
         this.responseData = responseData;
-        this.assertions = assertions;
+        this.assertions.addAll(assertions);
     }
+
 
     public String getName() {
         return name;
     }
 
-    @Nullable
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getSamplerData() {
         return samplerData;
     }
 
-    @Nullable
+    public void setSamplerData(String samplerData) {
+        this.samplerData = samplerData;
+    }
+
     public String getResponseData() {
         return responseData;
+    }
+
+    public void setResponseData(String responseData) {
+        this.responseData = responseData;
     }
 
     public List<Assertion> getAssertions() {
@@ -44,6 +59,10 @@ public class SampleResult {
             hasFailures |= (assertion.getState() == State.failed);
         }
         return hasFailures ? State.failed : State.success;
+    }
+
+    public void addAssertion(Assertion assertion) {
+        assertions.add(assertion);
     }
 
     public enum State {
