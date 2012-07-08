@@ -10,38 +10,27 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.IconLoader;
 import com.intellij.psi.search.GlobalSearchScope;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeCellRenderer;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreePath;
-import java.awt.*;
 import java.io.File;
 import java.util.List;
 
-class JmeterConsoleView extends JSplitPane implements ConsoleView, DataProvider {
-    private final ConsoleViewImpl console;
+public class JmeterConsoleView extends JSplitPane implements ConsoleView, DataProvider {
     private final File logFile;
-    private final DefaultMutableTreeNode root;
-    private final DefaultTreeModel treeModel;
+    private final ConsoleViewImpl console;
+    private final JmeterTreeView treeView;
 
     public JmeterConsoleView(Project project, File logFile, JmeterRunConfiguration runConfiguration) {
         super(JSplitPane.HORIZONTAL_SPLIT);
-        console = new ConsoleViewImpl(project, GlobalSearchScope.projectScope(project), false, null);
         this.logFile = logFile;
+        console = new ConsoleViewImpl(project, GlobalSearchScope.projectScope(project), false, null);
         console.addCustomConsoleAction(new RunJmeterGuiAction(runConfiguration));
-        root = new DefaultMutableTreeNode("root");
-        treeModel = new DefaultTreeModel(root);
-        JTree testTree = new JTree(treeModel);
-        testTree.expandPath(new TreePath(root));
-        testTree.setRootVisible(false);
-        testTree.setCellRenderer(new CustomIconRenderer());
-        add(new JScrollPane(testTree));
+
+        treeView = new JmeterTreeView();
+        add(new JScrollPane(treeView));
         add(console);
         setDividerLocation(500);
     }
@@ -54,8 +43,7 @@ class JmeterConsoleView extends JSplitPane implements ConsoleView, DataProvider 
     @Override
     public void clear() {
         console.clear();
-        root.removeAllChildren();
-        treeModel.nodeStructureChanged(root);
+        treeView.clear();
     }
 
     @Override
@@ -146,86 +134,12 @@ class JmeterConsoleView extends JSplitPane implements ConsoleView, DataProvider 
         return null;
     }
 
-    public void addTestOk(final String sampleName) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                DefaultMutableTreeNode node = new DefaultMutableTreeNode(new TestResult(sampleName, TestState.ok));
-                treeModel.insertNodeInto(node, root, root.getChildCount());
-                treeModel.nodeStructureChanged(root);
-            }
-        });
+
+    public void addTestOk(String sampleName) {
+        treeView.addTestOk(sampleName);
     }
 
-    public void addTestFailed(final String sampleName, final List<Assertion> failedAssertions) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                DefaultMutableTreeNode testNode = new DefaultMutableTreeNode(new TestResult(sampleName, TestState.failed));
-                treeModel.insertNodeInto(testNode, root, root.getChildCount());
-                for (Assertion assertion : failedAssertions) {
-                    TestState type = assertion.isError() ? TestState.error : TestState.failed;
-                    DefaultMutableTreeNode assertionNode = new DefaultMutableTreeNode(new TestResult(assertion.getName(), type));
-                    treeModel.insertNodeInto(assertionNode, testNode, testNode.getChildCount());
-                }
-                treeModel.nodeStructureChanged(root);
-            }
-        });
+    public void addTestFailed(String sampleName, List<Assertion> failedAssertions) {
+        treeView.addTestFailed(sampleName, failedAssertions);
     }
-
-    static class CustomIconRenderer extends DefaultTreeCellRenderer {
-        private static final Icon success = IconLoader.getIcon("/icons/icon_success_sml.gif");
-        private static final Icon warning = IconLoader.getIcon("/icons/icon_warning_sml.gif");
-        private static final Icon error = IconLoader.getIcon("/icons/icon_error_sml.gif");
-
-        public Component getTreeCellRendererComponent(JTree tree,
-                                                      Object value, boolean sel, boolean expanded, boolean leaf,
-                                                      int row, boolean hasFocus) {
-
-            super.getTreeCellRendererComponent(tree, value, sel,
-                    expanded, leaf, row, hasFocus);
-
-            DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
-            Object userObject = node.getUserObject();
-            if (userObject instanceof TestResult) {
-                TestResult testResult = (TestResult) userObject;
-                setText(testResult.getSampleName());
-                switch (testResult.getTestState()) {
-                    case ok:
-                        setIcon(success);
-                        break;
-                    case failed:
-                        setIcon(warning);
-                        break;
-                    case error:
-                        setIcon(error);
-                        break;
-                }
-            }
-            return this;
-        }
-    }
-
-    public enum TestState {
-        ok, failed, error
-    }
-
-    public static class TestResult {
-        private final String sampleName;
-        private final TestState testState;
-
-        public TestResult(String sampleName, TestState testState) {
-            this.sampleName = sampleName;
-            this.testState = testState;
-        }
-
-        public String getSampleName() {
-            return sampleName;
-        }
-
-        public TestState getTestState() {
-            return testState;
-        }
-    }
-
 }
