@@ -1,6 +1,6 @@
-package idea.plugin.jmeter.run;
+package idea.plugin.jmeter.domain;
 
-class Assertion {
+public class Assertion {
     private String name;
     private boolean failure;
     private boolean error;
@@ -13,19 +13,21 @@ class Assertion {
         this.name = name;
     }
 
-    public boolean isFailure() {
-        return failure;
-    }
-
     public void setFailure(boolean failure) {
         this.failure = failure;
     }
 
-    public boolean isError() {
-        return error;
-    }
-
     public void setError(boolean error) {
         this.error = error;
+    }
+
+    public SampleResult.State getState() {
+        if (failure) {
+            return SampleResult.State.failed;
+        }
+        if (error) {
+            return SampleResult.State.error;
+        }
+        return SampleResult.State.success;
     }
 }

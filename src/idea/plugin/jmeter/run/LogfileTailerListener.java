@@ -1,6 +1,8 @@
 package idea.plugin.jmeter.run;
 
 import com.intellij.execution.ui.ConsoleViewContentType;
+import idea.plugin.jmeter.domain.Assertion;
+import idea.plugin.jmeter.domain.SampleResult;
 import idea.plugin.jmeter.run.tailer.TailerListenerAdapter;
 
 import java.util.ArrayList;
@@ -49,9 +51,7 @@ class LogfileTailerListener extends TailerListenerAdapter {
 
         if (state == State.inAssertion && line.contains("</assertionResult>")) {
             state = State.inSample;
-            if (assertion.isError() || assertion.isFailure()) {
-                assertions.add(assertion);
-            }
+            assertions.add(assertion);
         }
 
         if (state == State.inSample && line.contains("</")) {

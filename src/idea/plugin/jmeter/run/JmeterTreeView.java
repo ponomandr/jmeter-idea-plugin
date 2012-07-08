@@ -1,6 +1,8 @@
 package idea.plugin.jmeter.run;
 
 import com.intellij.openapi.util.IconLoader;
+import idea.plugin.jmeter.domain.Assertion;
+import idea.plugin.jmeter.domain.SampleResult;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -33,26 +35,14 @@ public class JmeterTreeView extends JPanel {
         treeModel.nodeStructureChanged(root);
     }
 
-    public void addTestOk(final String sampleName) {
+    public void addTestFailed(final SampleResult sampleResult) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                DefaultMutableTreeNode node = new DefaultMutableTreeNode(new TestResult(sampleName, TestResult.State.success));
-                treeModel.insertNodeInto(node, root, root.getChildCount());
-                treeModel.nodeStructureChanged(root);
-            }
-        });
-    }
-
-    public void addTestFailed(final String sampleName, final java.util.List<Assertion> failedAssertions) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                DefaultMutableTreeNode testNode = new DefaultMutableTreeNode(new TestResult(sampleName, TestResult.State.failed));
+                DefaultMutableTreeNode testNode = new DefaultMutableTreeNode(sampleResult);
                 treeModel.insertNodeInto(testNode, root, root.getChildCount());
-                for (Assertion assertion : failedAssertions) {
-                    TestResult.State type = assertion.isError() ? TestResult.State.error : TestResult.State.failed;
-                    DefaultMutableTreeNode assertionNode = new DefaultMutableTreeNode(new TestResult(assertion.getName(), type));
+                for (Assertion assertion : sampleResult.getAssertions()) {
+                    DefaultMutableTreeNode assertionNode = new DefaultMutableTreeNode(assertion);
                     treeModel.insertNodeInto(assertionNode, testNode, testNode.getChildCount());
                 }
                 treeModel.nodeStructureChanged(root);
@@ -62,10 +52,10 @@ public class JmeterTreeView extends JPanel {
 
 
     private static class CustomIconRenderer extends DefaultTreeCellRenderer {
-        private static final Map<TestResult.State, Icon> icons = new HashMap<TestResult.State, Icon>() {{
-            put(TestResult.State.success, IconLoader.getIcon("/icons/icon_success_sml.gif"));
-            put(TestResult.State.failed, IconLoader.getIcon("/icons/icon_warning_sml.gif"));
-            put(TestResult.State.error, IconLoader.getIcon("/icons/icon_error_sml.gif"));
+        private static final Map<SampleResult.State, Icon> icons = new HashMap<SampleResult.State, Icon>() {{
+            put(SampleResult.State.success, IconLoader.getIcon("/icons/icon_success_sml.gif"));
+            put(SampleResult.State.failed, IconLoader.getIcon("/icons/icon_warning_sml.gif"));
+            put(SampleResult.State.error, IconLoader.getIcon("/icons/icon_error_sml.gif"));
         }};
 
         public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
@@ -73,10 +63,15 @@ public class JmeterTreeView extends JPanel {
 
             DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
             Object userObject = node.getUserObject();
-            if (userObject instanceof TestResult) {
-                TestResult testResult = (TestResult) userObject;
-                setText(testResult.simpleName());
-                setIcon(icons.get(testResult.state()));
+            if (userObject instanceof SampleResult) {
+                SampleResult testResult = (SampleResult) userObject;
+                setText(testResult.getName());
+                setIcon(icons.get(testResult.getState()));
+            }
+            if (userObject instanceof Assertion) {
+                Assertion assertion = (Assertion) userObject;
+                setText(assertion.getName());
+                setIcon(icons.get(assertion.getState()));
             }
             return this;
         }

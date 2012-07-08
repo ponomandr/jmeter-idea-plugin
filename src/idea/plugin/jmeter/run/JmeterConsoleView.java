@@ -11,6 +11,7 @@ import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
+import idea.plugin.jmeter.domain.SampleResult;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -135,11 +136,7 @@ public class JmeterConsoleView extends JSplitPane implements ConsoleView, DataPr
 
 
     public void addTestOk(SampleResult sampleResult) {
-        if (sampleResult.getAssertions().isEmpty()) {
-            treeView.addTestOk(sampleResult.getName());
-        } else {
-            treeView.addTestFailed(sampleResult.getName(), sampleResult.getAssertions());
-        }
+        treeView.addTestFailed(sampleResult);
     }
 
 }
