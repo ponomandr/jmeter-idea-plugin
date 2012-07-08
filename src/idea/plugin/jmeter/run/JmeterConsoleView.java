@@ -10,24 +10,17 @@ import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import idea.plugin.jmeter.domain.Assertion;
 import idea.plugin.jmeter.domain.SampleResult;
-import idea.plugin.jmeter.run.tailer.Tailer;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.io.File;
-import java.io.IOException;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
 
 public class JmeterConsoleView extends JSplitPane implements ConsoleView, DataProvider {
     private final File logFile;
     private final JmeterTreeView treeView;
     private final JTextArea samplerData;
     private final JTextArea responseData;
-    private final PipedOutputStream outputStream;
-    private PipedInputStream inputStream;
-    private final Thread thread;
 
     public JmeterConsoleView(File logFile) {
         super(JSplitPane.HORIZONTAL_SPLIT);
@@ -44,24 +37,6 @@ public class JmeterConsoleView extends JSplitPane implements ConsoleView, DataPr
         tabbedPane.add("Request", samplerData);
         tabbedPane.add("Response Data", responseData);
         add(tabbedPane);
-
-        outputStream = new PipedOutputStream();
-        inputStream = null;
-        try {
-            inputStream = new PipedInputStream(outputStream);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        final JmeterXmlParser parser = new JmeterXmlParser(inputStream, this);
-
-        thread = new Thread() {
-            @Override
-            public void run() {
-                parser.parse();
-            }
-        };
-        thread.setDaemon(true);
 
         setDividerLocation(500);
     }
@@ -83,8 +58,7 @@ public class JmeterConsoleView extends JSplitPane implements ConsoleView, DataPr
 
     @Override
     public void attachToProcess(ProcessHandler processHandler) {
-        processHandler.addProcessListener(new JmeterProcessListener(logFile, outputStream));
-        thread.start();
+        processHandler.addProcessListener(new JmeterProcessListener(logFile, this));
     }
 
     @Override
@@ -150,8 +124,6 @@ public class JmeterConsoleView extends JSplitPane implements ConsoleView, DataPr
     @Override
     public void dispose() {
         treeView.clear();
-        Tailer.closeQuietly(inputStream);
-        Tailer.closeQuietly(outputStream);
     }
 
     @Override
