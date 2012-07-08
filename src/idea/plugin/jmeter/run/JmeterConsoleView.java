@@ -16,7 +16,6 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.io.File;
-import java.util.List;
 
 public class JmeterConsoleView extends JSplitPane implements ConsoleView, DataProvider {
     private final File logFile;
@@ -135,11 +134,12 @@ public class JmeterConsoleView extends JSplitPane implements ConsoleView, DataPr
     }
 
 
-    public void addTestOk(String sampleName) {
-        treeView.addTestOk(sampleName);
+    public void addTestOk(SampleResult sampleResult) {
+        if (sampleResult.getAssertions().isEmpty()) {
+            treeView.addTestOk(sampleResult.getName());
+        } else {
+            treeView.addTestFailed(sampleResult.getName(), sampleResult.getAssertions());
+        }
     }
 
-    public void addTestFailed(String sampleName, List<Assertion> failedAssertions) {
-        treeView.addTestFailed(sampleName, failedAssertions);
-    }
 }

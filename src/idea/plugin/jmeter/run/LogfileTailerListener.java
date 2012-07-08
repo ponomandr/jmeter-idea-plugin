@@ -15,7 +15,7 @@ class LogfileTailerListener extends TailerListenerAdapter {
     private State state = State.inTestResults;
     private String sampleName;
     private Assertion assertion;
-    private List<Assertion> failedAssertions;
+    private List<Assertion> assertions;
 
 
     public LogfileTailerListener(JmeterConsoleView console) {
@@ -27,7 +27,7 @@ class LogfileTailerListener extends TailerListenerAdapter {
         if (state == State.inTestResults && line.contains("lb=")) {
             state = State.inSample;
             sampleName = extractSampleName(line);
-            failedAssertions = new ArrayList<Assertion>();
+            assertions = new ArrayList<Assertion>();
             assertion = new Assertion();
         }
 
@@ -50,7 +50,7 @@ class LogfileTailerListener extends TailerListenerAdapter {
         if (state == State.inAssertion && line.contains("</assertionResult>")) {
             state = State.inSample;
             if (assertion.isError() || assertion.isFailure()) {
-                failedAssertions.add(assertion);
+                assertions.add(assertion);
             }
         }
 
@@ -61,11 +61,8 @@ class LogfileTailerListener extends TailerListenerAdapter {
     }
 
     private void printSampleResult() {
-        if (failedAssertions.isEmpty()) {
-            console.addTestOk(sampleName);
-        } else {
-            console.addTestFailed(sampleName, failedAssertions);
-        }
+        SampleResult sampleResult = new SampleResult(sampleName, assertions);
+        console.addTestOk(sampleResult);
     }
 
     @Override
