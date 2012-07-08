@@ -5,6 +5,8 @@ import idea.plugin.jmeter.domain.Assertion;
 import idea.plugin.jmeter.domain.SampleResult;
 
 import javax.swing.*;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
@@ -18,7 +20,7 @@ public class JmeterTreeView extends JPanel {
     private final DefaultMutableTreeNode root;
     private final DefaultTreeModel treeModel;
 
-    public JmeterTreeView() {
+    public JmeterTreeView(final JmeterConsoleView jmeterConsoleView) {
         super(new BorderLayout());
         root = new DefaultMutableTreeNode();
         treeModel = new DefaultTreeModel(root);
@@ -27,6 +29,22 @@ public class JmeterTreeView extends JPanel {
         testTree.setRootVisible(false);
         testTree.setCellRenderer(new CustomIconRenderer());
         testTree.setShowsRootHandles(true);
+        testTree.addTreeSelectionListener(new TreeSelectionListener() {
+            @Override
+            public void valueChanged(TreeSelectionEvent e) {
+                Object pathComponent = e.getPath().getLastPathComponent();
+                if (pathComponent instanceof DefaultMutableTreeNode) {
+                    DefaultMutableTreeNode node = (DefaultMutableTreeNode) pathComponent;
+                    Object userObject = node.getUserObject();
+                    if (userObject instanceof Assertion) {
+                        jmeterConsoleView.onAssertionSelected((Assertion) userObject);
+                    }
+                    if (userObject instanceof SampleResult) {
+                        jmeterConsoleView.onSampleResultSelected((SampleResult) userObject);
+                    }
+                }
+            }
+        });
         add(testTree, BorderLayout.CENTER);
     }
 

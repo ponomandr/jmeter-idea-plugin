@@ -4,6 +4,7 @@ public class Assertion {
     private String name;
     private boolean failure;
     private boolean error;
+    private String failureMessage;
 
     public String getName() {
         return name;
@@ -11,10 +12,6 @@ public class Assertion {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public void setFailure(boolean failure) {
-        this.failure = failure;
     }
 
     public void setError(boolean error) {
@@ -29,5 +26,17 @@ public class Assertion {
             return SampleResult.State.error;
         }
         return SampleResult.State.success;
+    }
+
+    public void setFailure(boolean failure) {
+        this.failure = failure;
+    }
+
+    public String getFailureMessage() {
+        return failureMessage;
+    }
+
+    public void setFailureMessage(String failureMessage) {
+        this.failureMessage = failureMessage;
     }
 }

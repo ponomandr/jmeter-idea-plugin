@@ -2,15 +2,13 @@ package idea.plugin.jmeter.run;
 
 import com.intellij.execution.filters.Filter;
 import com.intellij.execution.filters.HyperlinkInfo;
-import com.intellij.execution.impl.ConsoleViewImpl;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.ui.ConsoleView;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.LangDataKeys;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.search.GlobalSearchScope;
+import idea.plugin.jmeter.domain.Assertion;
 import idea.plugin.jmeter.domain.SampleResult;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -20,41 +18,39 @@ import java.io.File;
 
 public class JmeterConsoleView extends JSplitPane implements ConsoleView, DataProvider {
     private final File logFile;
-    private final ConsoleViewImpl console;
     private final JmeterTreeView treeView;
+    private final JTextArea textArea;
 
-    public JmeterConsoleView(Project project, File logFile, JmeterRunConfiguration runConfiguration) {
+    public JmeterConsoleView(File logFile) {
         super(JSplitPane.HORIZONTAL_SPLIT);
         this.logFile = logFile;
-        console = new ConsoleViewImpl(project, GlobalSearchScope.projectScope(project), false, null);
-        console.addCustomConsoleAction(new RunJmeterGuiAction(runConfiguration));
+//        console = new ConsoleViewImpl(project, GlobalSearchScope.projectScope(project), false, null);
+//        console.addCustomConsoleAction(new RunJmeterGuiAction(runConfiguration));
 
-        treeView = new JmeterTreeView();
+        treeView = new JmeterTreeView(this);
         add(new JScrollPane(treeView));
-        add(console);
+        textArea = new JTextArea();
+        add(textArea);
         setDividerLocation(500);
     }
 
     @Override
     public void print(String s, ConsoleViewContentType contentType) {
-        console.print(s, contentType);
     }
 
     @Override
     public void clear() {
-        console.clear();
+        textArea.setText("");
         treeView.clear();
     }
 
     @Override
     public void scrollTo(int offset) {
-        console.scrollTo(offset);
     }
 
     @Override
     public void attachToProcess(ProcessHandler processHandler) {
         processHandler.addProcessListener(new JmeterProcessListener(this, logFile));
-        console.attachToProcess(processHandler);
     }
 
     @Override
@@ -73,27 +69,23 @@ public class JmeterConsoleView extends JSplitPane implements ConsoleView, DataPr
 
     @Override
     public void performWhenNoDeferredOutput(Runnable runnable) {
-        console.performWhenNoDeferredOutput(runnable);
     }
 
     @Override
     public void setHelpId(String helpId) {
-        console.setHelpId(helpId);
     }
 
     @Override
     public void addMessageFilter(Filter filter) {
-        console.addMessageFilter(filter);
     }
 
     @Override
     public void printHyperlink(String hyperlinkText, HyperlinkInfo info) {
-        console.printHyperlink(hyperlinkText, info);
     }
 
     @Override
     public int getContentSize() {
-        return console.getContentSize();
+        return 0;
     }
 
     @Override
@@ -104,7 +96,7 @@ public class JmeterConsoleView extends JSplitPane implements ConsoleView, DataPr
     @NotNull
     @Override
     public AnAction[] createConsoleActions() {
-        return console.createConsoleActions();
+        return new AnAction[0];
     }
 
     @Override
@@ -118,12 +110,12 @@ public class JmeterConsoleView extends JSplitPane implements ConsoleView, DataPr
 
     @Override
     public JComponent getPreferredFocusableComponent() {
-        return console.getPreferredFocusableComponent();
+        return textArea;
     }
 
     @Override
     public void dispose() {
-        console.dispose();
+        treeView.clear();
     }
 
     @Override
@@ -135,8 +127,15 @@ public class JmeterConsoleView extends JSplitPane implements ConsoleView, DataPr
     }
 
 
-    public void addTestOk(SampleResult sampleResult) {
+    public void addSampleResult(SampleResult sampleResult) {
         treeView.addTestFailed(sampleResult);
     }
 
+    public void onAssertionSelected(Assertion assertion) {
+        textArea.setText(assertion.getFailureMessage());
+    }
+
+    public void onSampleResultSelected(SampleResult sampleResult) {
+        textArea.setText(sampleResult.getName());
+    }
 }

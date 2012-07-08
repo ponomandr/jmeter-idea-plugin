@@ -45,6 +45,10 @@ class LogfileTailerListener extends TailerListenerAdapter {
             assertion.setFailure(extractAssertionFailure(line));
         }
 
+        if (state == State.inAssertion && line.contains("<failureMessage>")) {
+            assertion.setFailureMessage(extractTagBody(line, "failureMessage"));
+        }
+
         if (state == State.inAssertion && line.contains("<error>")) {
             assertion.setError(extractAssertionError(line));
         }
@@ -62,7 +66,7 @@ class LogfileTailerListener extends TailerListenerAdapter {
 
     private void printSampleResult() {
         SampleResult sampleResult = new SampleResult(sampleName, assertions);
-        console.addTestOk(sampleResult);
+        console.addSampleResult(sampleResult);
     }
 
     @Override
