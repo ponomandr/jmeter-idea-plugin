@@ -2,7 +2,7 @@ package idea.plugin.jmeter.run;
 
 public class TestResult {
     public enum State {
-        ok, failed, error
+        success, failed, error
     }
 
     private final String sampleName;

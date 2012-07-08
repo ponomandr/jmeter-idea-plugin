@@ -8,6 +8,8 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class JmeterTreeView extends JPanel {
 
@@ -16,7 +18,7 @@ public class JmeterTreeView extends JPanel {
 
     public JmeterTreeView() {
         super(new BorderLayout());
-        root = new DefaultMutableTreeNode("root");
+        root = new DefaultMutableTreeNode();
         treeModel = new DefaultTreeModel(root);
         JTree testTree = new JTree(treeModel);
         testTree.expandPath(new TreePath(root));
@@ -35,7 +37,7 @@ public class JmeterTreeView extends JPanel {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                DefaultMutableTreeNode node = new DefaultMutableTreeNode(new TestResult(sampleName, TestResult.State.ok));
+                DefaultMutableTreeNode node = new DefaultMutableTreeNode(new TestResult(sampleName, TestResult.State.success));
                 treeModel.insertNodeInto(node, root, root.getChildCount());
                 treeModel.nodeStructureChanged(root);
             }
@@ -59,36 +61,25 @@ public class JmeterTreeView extends JPanel {
     }
 
 
-    static class CustomIconRenderer extends DefaultTreeCellRenderer {
-        private static final Icon success = IconLoader.getIcon("/icons/icon_success_sml.gif");
-        private static final Icon warning = IconLoader.getIcon("/icons/icon_warning_sml.gif");
-        private static final Icon error = IconLoader.getIcon("/icons/icon_error_sml.gif");
+    private static class CustomIconRenderer extends DefaultTreeCellRenderer {
+        private static final Map<TestResult.State, Icon> icons = new HashMap<TestResult.State, Icon>() {{
+            put(TestResult.State.success, IconLoader.getIcon("/icons/icon_success_sml.gif"));
+            put(TestResult.State.failed, IconLoader.getIcon("/icons/icon_warning_sml.gif"));
+            put(TestResult.State.error, IconLoader.getIcon("/icons/icon_error_sml.gif"));
+        }};
 
         public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
-
-            super.getTreeCellRendererComponent(tree, value, sel,
-                    expanded, leaf, row, hasFocus);
+            super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
 
             DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
             Object userObject = node.getUserObject();
             if (userObject instanceof TestResult) {
                 TestResult testResult = (TestResult) userObject;
                 setText(testResult.simpleName());
-                switch (testResult.state()) {
-                    case ok:
-                        setIcon(success);
-                        break;
-                    case failed:
-                        setIcon(warning);
-                        break;
-                    case error:
-                        setIcon(error);
-                        break;
-                }
+                setIcon(icons.get(testResult.state()));
             }
             return this;
         }
     }
-
 
 }
