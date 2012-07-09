@@ -1,0 +1,5 @@
+Data shown in the result tree should be the same as JMeter GUI
+Run GUI for non-gui test
+Save binary response to file
+Edit JMX file as XML
+Filter successful results in the tree
