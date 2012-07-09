@@ -30,13 +30,13 @@ public class JmeterXmlParser {
     public void parse() {
         try {
             SAXParser saxParser = SAXParserFactory.newInstance().newSAXParser();
-            saxParser.parse(inputStream, new MyDefaultHandler());
+            saxParser.parse(inputStream, new MyHandler());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    private class MyDefaultHandler extends DefaultHandler {
+    private class MyHandler extends DefaultHandler {
         @Override
         public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
             bodyBuilder = new StringBuilder();

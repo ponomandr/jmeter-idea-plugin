@@ -8,6 +8,7 @@ import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.actionSystem.LangDataKeys;
+import com.intellij.ui.TabbedPaneWrapper;
 import idea.plugin.jmeter.domain.Assertion;
 import idea.plugin.jmeter.domain.SampleResult;
 import org.jetbrains.annotations.NonNls;
@@ -33,10 +34,11 @@ public class JmeterConsoleView extends JSplitPane implements ConsoleView, DataPr
 
         samplerData = new JTextArea();
         responseData = new JTextArea();
-        JTabbedPane tabbedPane = new JTabbedPane();
-        tabbedPane.add("Request", new JScrollPane(samplerData));
-        tabbedPane.add("Response Data", new JScrollPane(responseData));
-        add(tabbedPane);
+
+        TabbedPaneWrapper tabbedPane = new TabbedPaneWrapper(this);
+        tabbedPane.insertTab("Request", null, new JScrollPane(samplerData), null, 0);
+        tabbedPane.insertTab("Response Data", null, new JScrollPane(responseData), null, 1);
+        add(tabbedPane.getComponent());
 
         setDividerLocation(500);
     }
