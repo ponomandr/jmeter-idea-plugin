@@ -4,6 +4,7 @@ import com.intellij.execution.process.ProcessAdapter;
 import com.intellij.execution.process.ProcessEvent;
 import idea.plugin.jmeter.run.tailer.Tailer;
 import idea.plugin.jmeter.run.tailer.TailerListenerAdapter;
+import idea.plugin.jmeter.util.XmlHack;
 
 import java.io.File;
 import java.io.IOException;
@@ -69,7 +70,7 @@ class JmeterProcessListener extends ProcessAdapter {
         @Override
         public void handle(String line) {
             try {
-                System.out.println(line);
+                line = XmlHack.encode(line);
                 outputStream.write(line.getBytes());
                 outputStream.write("\n".getBytes());
             } catch (IOException e) {

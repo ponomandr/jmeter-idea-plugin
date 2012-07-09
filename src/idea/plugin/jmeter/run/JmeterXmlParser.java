@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import idea.plugin.jmeter.domain.Assertion;
 import idea.plugin.jmeter.domain.SampleResult;
 import idea.plugin.jmeter.util.Path;
+import idea.plugin.jmeter.util.XmlHack;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -59,6 +60,8 @@ public class JmeterXmlParser {
 
         @Override
         public void endElement(String uri, String localName, String qName) throws SAXException {
+            String tagBody = XmlHack.decode(bodyBuilder);
+
             if (path.is("/testResults/sample")) {
                 console.addSampleResult(sampleResult);
             }
@@ -72,27 +75,27 @@ public class JmeterXmlParser {
             }
 
             if (path.is("/testResults/*/samplerData")) {
-                sampleResult.setSamplerData(bodyBuilder.toString());
+                sampleResult.setSamplerData(tagBody);
             }
 
             if (path.is("/testResults/*/responseData")) {
-                sampleResult.setResponseData(bodyBuilder.toString());
+                sampleResult.setResponseData(tagBody);
             }
 
             if (path.is("/testResults/*/assertionResult/name")) {
-                assertion.setName(bodyBuilder.toString());
+                assertion.setName(tagBody);
             }
 
             if (path.is("/testResults/*/assertionResult/failure")) {
-                assertion.setFailure(Boolean.valueOf(bodyBuilder.toString()));
+                assertion.setFailure(Boolean.valueOf(tagBody));
             }
 
             if (path.is("/testResults/*/assertionResult/error")) {
-                assertion.setError(Boolean.valueOf(bodyBuilder.toString()));
+                assertion.setError(Boolean.valueOf(tagBody));
             }
 
             if (path.is("/testResults/*/assertionResult/failureMessage")) {
-                assertion.setFailureMessage(bodyBuilder.toString());
+                assertion.setFailureMessage(tagBody);
             }
 
             String remove = path.pop();
