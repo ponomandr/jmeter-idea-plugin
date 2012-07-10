@@ -16,14 +16,20 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 
 public class JmeterConsoleView extends JSplitPane implements ConsoleView, DataProvider {
+    public static final String SAMPLER_TABS = "samplerTabs";
+    public static final String ASSERTION_TABS = "assertionTabs";
     private final File logFile;
     private final JmeterTreeView treeView;
     private final JTextArea samplerResult;
     private final JTextArea request;
     private final JTextArea responseData;
+    private final JTextArea assertionResult;
+    private final CardLayout cardLayout;
+    private final JPanel cardPanel;
 
     public JmeterConsoleView(File logFile) {
         super(JSplitPane.HORIZONTAL_SPLIT);
@@ -37,12 +43,21 @@ public class JmeterConsoleView extends JSplitPane implements ConsoleView, DataPr
         samplerResult = new JTextArea();
         request = new JTextArea();
         responseData = new JTextArea();
+        assertionResult = new JTextArea();
 
-        TabbedPaneWrapper tabbedPane = new TabbedPaneWrapper(this);
-        tabbedPane.insertTab("Sampler result", null, new JScrollPane(samplerResult), null, 0);
-        tabbedPane.insertTab("Request", null, new JScrollPane(request), null, 1);
-        tabbedPane.insertTab("Response Data", null, new JScrollPane(responseData), null, 2);
-        add(tabbedPane.getComponent());
+        cardLayout = new CardLayout();
+        cardPanel = new JPanel(cardLayout);
+        add(cardPanel);
+
+        TabbedPaneWrapper samplerTabs = new TabbedPaneWrapper(this);
+        samplerTabs.insertTab("Sampler result", null, new JScrollPane(samplerResult), null, 0);
+        samplerTabs.insertTab("Request", null, new JScrollPane(request), null, 1);
+        samplerTabs.insertTab("Response Data", null, new JScrollPane(responseData), null, 2);
+        cardPanel.add(samplerTabs.getComponent(), SAMPLER_TABS);
+
+        TabbedPaneWrapper assertionTabs = new TabbedPaneWrapper(this);
+        assertionTabs.insertTab("Assertion result", null, new JScrollPane(assertionResult), null, 0);
+        cardPanel.add(assertionTabs.getComponent(), ASSERTION_TABS);
 
         setDividerLocation(500);
     }
@@ -146,13 +161,19 @@ public class JmeterConsoleView extends JSplitPane implements ConsoleView, DataPr
         treeView.addTestFailed(sampleResult);
     }
 
-    public void onAssertionSelected(Assertion assertion) {
-        samplerResult.setText(assertion.getFailureMessage());
-        request.setText("");
-        responseData.setText("");
+    public void onSampleResultSelected(SampleResult result) {
+        samplerResult.setText(getSamplerResultContent(result));
+        request.setText(getResultContent(result));
+        responseData.setText(getResponseDataContent(result));
+        cardLayout.show(cardPanel, SAMPLER_TABS);
     }
 
-    public void onSampleResultSelected(SampleResult result) {
+    public void onAssertionSelected(Assertion assertion) {
+        assertionResult.setText(assertion.getFailureMessage());
+        cardLayout.show(cardPanel, ASSERTION_TABS);
+    }
+
+    private String getSamplerResultContent(SampleResult result) {
         StringBuilder samplerContent = new StringBuilder();
         samplerContent.append("Thread Name: ");
         samplerContent.append(result.getThreadName());
@@ -189,8 +210,10 @@ public class JmeterConsoleView extends JSplitPane implements ConsoleView, DataPr
         if (!StringUtils.isBlank(result.getSamplerData())) {
             samplerContent.append(result.getSamplerData());
         }
-        samplerResult.setText(samplerContent.toString());
+        return samplerContent.toString();
+    }
 
+    private String getResultContent(SampleResult result) {
         StringBuilder requestContent = new StringBuilder();
         requestContent.append(result.getMethod());
         requestContent.append(' ');
@@ -208,8 +231,10 @@ public class JmeterConsoleView extends JSplitPane implements ConsoleView, DataPr
             requestContent.append(result.getRequestHeader());
             requestContent.append('\n');
         }
-        request.setText(requestContent.toString());
+        return requestContent.toString();
+    }
 
-        responseData.setText(result.getResponseData());
+    private String getResponseDataContent(SampleResult result) {
+        return result.getResponseData();
     }
 }

@@ -4,4 +4,4 @@ Save binary response to file
 Edit JMX file as XML
 Filter successful results in the tree
 Group results by thread
-Separate tab for assertion result
+Do not show httpSample related info for a plain sample
