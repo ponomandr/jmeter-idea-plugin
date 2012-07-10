@@ -5,6 +5,7 @@ import com.intellij.execution.configurations.JavaCommandLineState;
 import com.intellij.execution.configurations.JavaParameters;
 import com.intellij.execution.configurations.ParametersList;
 import com.intellij.execution.filters.TextConsoleBuilderImpl;
+import com.intellij.execution.impl.ConsoleViewImpl;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.ui.ConsoleView;
 import com.intellij.openapi.projectRoots.impl.JavaAwareProjectJdkTableImpl;
@@ -30,7 +31,11 @@ class JmeterRunProfileState extends JavaCommandLineState {
         setConsoleBuilder(new TextConsoleBuilderImpl(executionEnvironment.getProject()) {
             @Override
             protected ConsoleView createConsole() {
-                return new JmeterConsoleView(logFile);
+                if (runConfiguration.isNonguiMode()) {
+                    return new JmeterConsoleView(logFile);
+                } else {
+                    return new ConsoleViewImpl(getProject(), true);
+                }
             }
         });
     }
