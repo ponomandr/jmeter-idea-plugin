@@ -1,19 +1,17 @@
 package idea.plugin.jmeter.run;
 
 import com.google.common.base.Preconditions;
-import com.intellij.execution.ui.ConsoleViewContentType;
 import idea.plugin.jmeter.domain.Assertion;
 import idea.plugin.jmeter.domain.SampleResult;
-import idea.plugin.jmeter.run.tailer.TailerListenerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.apache.commons.lang.StringEscapeUtils.unescapeXml;
 
-class LogfileTailerListener extends TailerListenerAdapter {
+public class JmeterLogParser {
 
-    private enum State {inTestResults, inSample, inAssertion}
+    private enum State {inTestResults, inSample, inAssertion;}
 
     private final JmeterConsoleView console;
 
@@ -24,13 +22,12 @@ class LogfileTailerListener extends TailerListenerAdapter {
     private Assertion assertion;
     private List<Assertion> assertions;
 
-
-    public LogfileTailerListener(JmeterConsoleView console) {
+    public JmeterLogParser(JmeterConsoleView console) {
         this.console = console;
     }
 
-    @Override
-    public void handle(String line) {
+
+    public void parseLine(String line) {
         System.out.println(line);
         String trim = line.trim();
         if (state == State.inTestResults && (trim.startsWith("<sample") || trim.startsWith("<httpSample"))) {
@@ -91,11 +88,6 @@ class LogfileTailerListener extends TailerListenerAdapter {
         console.addSampleResult(sampleResult);
     }
 
-    @Override
-    public void handle(Exception ex) {
-        console.print(ex.toString(), ConsoleViewContentType.ERROR_OUTPUT);
-    }
-
     private String extractAttribute(String line, String name) {
         int start = line.indexOf(name + "=\"") + (name + "=\"").length();
         int end = line.indexOf('"', start + 1);
@@ -151,5 +143,6 @@ class LogfileTailerListener extends TailerListenerAdapter {
         }
     }
 */
+
 
 }
