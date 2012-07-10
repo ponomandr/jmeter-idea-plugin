@@ -1,6 +1,9 @@
 Data shown in the result tree should be the same as JMeter GUI
+Try to use xstream instead of SAX
+Handle gracefully "premature end of file" exception
+Handle command line parameter collisions
 Run GUI for non-gui test
-Save binary response to file
 Edit JMX file as XML
 Filter successful results in the tree
 Group results by thread
+Save binary response to file
