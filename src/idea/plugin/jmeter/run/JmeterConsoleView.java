@@ -41,9 +41,13 @@ public class JmeterConsoleView extends JSplitPane implements ConsoleView, DataPr
         add(new JScrollPane(treeView));
 
         samplerResult = new JTextArea();
+        samplerResult.setEditable(false);
         request = new JTextArea();
+        request.setEditable(false);
         responseData = new JTextArea();
+        responseData.setEditable(false);
         assertionResult = new JTextArea();
+        assertionResult.setEditable(false);
 
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
@@ -207,29 +211,33 @@ public class JmeterConsoleView extends JSplitPane implements ConsoleView, DataPr
             samplerContent.append(result.getResponseHeader());
             samplerContent.append('\n');
         }
-        if (!StringUtils.isBlank(result.getSamplerData())) {
-            samplerContent.append(result.getSamplerData());
-        }
         return samplerContent.toString();
     }
 
     private String getResultContent(SampleResult result) {
         StringBuilder requestContent = new StringBuilder();
-        requestContent.append(result.getMethod());
-        requestContent.append(' ');
-        requestContent.append(result.getUrl());
-        requestContent.append("\n\n");
+
+        if (!StringUtils.isBlank(result.getMethod())) {
+            requestContent.append(result.getMethod());
+            requestContent.append(' ');
+            requestContent.append(result.getUrl());
+            requestContent.append("\n\n");
+        }
 
         if (!StringUtils.isBlank(result.getRequestHeader())) {
             requestContent.append("Cookies:\n");
             requestContent.append(result.getCookies());
-            requestContent.append('\n');
+            requestContent.append("\n\n");
         }
 
         if (!StringUtils.isBlank(result.getRequestHeader())) {
             requestContent.append("Request Headers:\n");
             requestContent.append(result.getRequestHeader());
-            requestContent.append('\n');
+            requestContent.append("\n\n");
+        }
+
+        if (!StringUtils.isBlank(result.getSamplerData())) {
+            requestContent.append(result.getSamplerData());
         }
         return requestContent.toString();
     }
