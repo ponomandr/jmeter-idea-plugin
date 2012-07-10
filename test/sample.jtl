@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testResults version="1.2">
+    <httpSample t="6075" lt="6075" ts="1341932993392" s="false" lb="HTTP Request" rc="400"
+                rm="Bad Request ( The data is invalid.  )" tn="Thread Group 1-1" dt="text" by="4223">
+        <assertionResult>
+            <name>Response Assertion</name>
+            <failure>true</failure>
+            <error>false</error>
+            <failureMessage>Test failed: text expected to contain /1Apache Software Foundation/</failureMessage>
+        </assertionResult>
+        <assertionResult>
+            <name>Response Assertion 2</name>
+            <failure>true</failure>
+            <error>false</error>
+            <failureMessage>Test failed: text expected to contain /Apache Software Foundation/</failureMessage>
+        </assertionResult>
+    </httpSample>
+    <httpSample t="5592" lt="5592" ts="1341932993878" s="false" lb="HTTP Request" rc="400"
+                rm="Bad Request ( The data is invalid.  )" tn="Thread Group 1-2" dt="text" by="4223">
+        <assertionResult>
+            <name>Response Assertion</name>
+            <failure>true</failure>
+            <error>false</error>
+            <failureMessage>Test failed: text expected to contain /1Apache Software Foundation/</failureMessage>
+        </assertionResult>
+        <assertionResult>
+            <name>Response Assertion 2</name>
+            <failure>true</failure>
+            <error>false</error>
+            <failureMessage>Test failed: text expected to contain /Apache Software Foundation/</failureMessage>
+        </assertionResult>
+    </httpSample>
+</testResults>
