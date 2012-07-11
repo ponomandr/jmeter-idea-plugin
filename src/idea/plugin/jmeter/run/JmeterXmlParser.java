@@ -63,7 +63,7 @@ public class JmeterXmlParser {
             String remove = path.removeLast();
             Preconditions.checkState(qName.equals(remove));
 
-            if (qName.equals("sample") || qName.equals("httpSample")) {
+            if ("sample".equals(qName) || "httpSample".equals(qName)) {
                 console.addSampleResult(sampleResult);
             }
 
@@ -71,11 +71,11 @@ public class JmeterXmlParser {
                 sampleResult.addAssertion(assertion);
             }
 
-            if (qName.equals("samplerData")) {
+            if ("samplerData".equals(qName)) {
                 sampleResult.setSamplerData(bodyBuilder.toString());
             }
 
-            if (qName.equals("responseData")) {
+            if ("responseData".equals(qName)) {
                 sampleResult.setResponseData(bodyBuilder.toString());
             }
 

@@ -80,7 +80,9 @@ public class JmeterXmlParserTest {
     @Test
     public void testParseHttpSampleWithSuccessfulAssertion() {
         // Given
-        String xml = "<httpSample t=\"6973\" lt=\"6611\" ts=\"1341770750464\" s=\"false\" lb=\"HTTP Request\" rc=\"200\" rm=\"OK\" tn=\"Thread Group 1-1\" dt=\"text\" by=\"36433\">\n" +
+        String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<testResults version=\"1.2\">\n" +
+                "<httpSample t=\"6973\" lt=\"6611\" ts=\"1341770750464\" s=\"false\" lb=\"HTTP Request\" rc=\"200\" rm=\"OK\" tn=\"Thread Group 1-1\" dt=\"text\" by=\"36433\">\n" +
                 "  <assertionResult>\n" +
                 "    <name>Response Assertion 2</name>\n" +
                 "    <failure>false</failure>\n" +
@@ -89,7 +91,8 @@ public class JmeterXmlParserTest {
                 "  <cookies class=\"java.lang.String\"></cookies>\n" +
                 "  <method class=\"java.lang.String\">GET</method>\n" +
                 "  <queryString class=\"java.lang.String\"></queryString>\n" +
-                "</httpSample>\n";
+                "</httpSample>\n" +
+                "</testResults>";
         JmeterXmlParser parser = new JmeterXmlParser(toInputStream(xml), consoleView);
 
         // When

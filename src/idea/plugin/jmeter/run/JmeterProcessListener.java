@@ -69,6 +69,7 @@ class JmeterProcessListener extends ProcessAdapter {
         @Override
         public void handle(String line) {
             try {
+                System.out.println(line);
                 outputStream.write(line.getBytes());
             } catch (IOException e) {
                 throw new RuntimeException(e);
