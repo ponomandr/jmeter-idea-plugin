@@ -71,6 +71,7 @@ class JmeterProcessListener extends ProcessAdapter {
             try {
                 System.out.println(line);
                 outputStream.write(line.getBytes());
+                outputStream.write("\n".getBytes());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

@@ -34,8 +34,8 @@ public class JmeterConsoleView extends JSplitPane implements ConsoleView, DataPr
         samplerData = new JTextArea();
         responseData = new JTextArea();
         JTabbedPane tabbedPane = new JTabbedPane();
-        tabbedPane.add("Request", samplerData);
-        tabbedPane.add("Response Data", responseData);
+        tabbedPane.add("Request", new JScrollPane(samplerData));
+        tabbedPane.add("Response Data", new JScrollPane(responseData));
         add(tabbedPane);
 
         setDividerLocation(500);

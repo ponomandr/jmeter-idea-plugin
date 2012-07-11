@@ -70,7 +70,7 @@ class JmeterRunProfileState extends JavaCommandLineState {
             programParameters.add("--nongui");
             programParameters.add("-J", "jmeter.save.saveservice.assertions=true");
             programParameters.add("-J", "jmeter.save.saveservice.samplerData=true");
-//            programParameters.add("-J", "jmeter.save.saveservice.response_data=true");
+            programParameters.add("-J", "jmeter.save.saveservice.response_data=true");
         }
 
         return parameters;
