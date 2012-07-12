@@ -11,6 +11,7 @@ import java.io.InputStream;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -41,7 +42,6 @@ public class JmeterXmlParserTest {
         assertThat(argument.getValue().getResponseData(), nullValue());
     }
 
-
     @Test
     public void testParseHttpSampleWithFailedAssertion() {
         // Given
@@ -54,9 +54,6 @@ public class JmeterXmlParserTest {
                 "    <error>false</error>\n" +
                 "    <failureMessage>Test failed: text expected to contain /1Apache Software Foundation/</failureMessage>\n" +
                 "  </assertionResult>\n" +
-                "  <cookies class=\"java.lang.String\"></cookies>\n" +
-                "  <method class=\"java.lang.String\">GET</method>\n" +
-                "  <queryString class=\"java.lang.String\"></queryString>\n" +
                 "</httpSample>\n" +
                 "</testResults>";
         JmeterXmlParser parser = new JmeterXmlParser(toInputStream(xml), consoleView);
@@ -75,6 +72,41 @@ public class JmeterXmlParserTest {
         assertThat(assertion.getName(), is("Response Assertion"));
         assertThat(assertion.getState(), is(SampleResult.State.failed));
         assertThat(assertion.getFailureMessage(), is("Test failed: text expected to contain /1Apache Software Foundation/"));
+    }
+
+    @Test
+    public void testParseHttpSampleWithResponseHeaders() {
+        // Given
+        String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<testResults version=\"1.2\">\n" +
+                "<httpSample t=\"6973\" lt=\"6611\" ts=\"1341770750464\" s=\"false\" lb=\"HTTP Request\" rc=\"200\" rm=\"OK\" tn=\"Thread Group 1-1\" dt=\"text\" by=\"36433\">\n" +
+                "  <responseHeader class=\"java.lang.String\">HTTP/1.1 200 OK\n" +
+                "            Date: Thu, 12 Jul 2012 20:25:21 GMT\n" +
+                "            Server: Apache/2.4.1 (Unix) OpenSSL/1.0.0g\n" +
+                "            Last-Modified: Sun, 27 May 2012 21:39:19 GMT\n" +
+                "            ETag: &quot;253f-4c10b6f108fc0&quot;\n" +
+                "            Accept-Ranges: bytes\n" +
+                "            Content-Length: 9535\n" +
+                "            Vary: Accept-Encoding\n" +
+                "            Connection: close\n" +
+                "            Content-Type: text/html; charset=utf-8\n" +
+                "  </responseHeader>\n" +
+                "  <cookies class=\"java.lang.String\"></cookies>\n" +
+                "  <method class=\"java.lang.String\">GET</method>\n" +
+                "  <queryString class=\"java.lang.String\"></queryString>\n" +
+                "</httpSample>\n" +
+                "</testResults>";
+        JmeterXmlParser parser = new JmeterXmlParser(toInputStream(xml), consoleView);
+
+        // When
+        parser.parse();
+
+        // Then
+        ArgumentCaptor<SampleResult> argument = ArgumentCaptor.forClass(SampleResult.class);
+        verify(consoleView).addSampleResult(argument.capture());
+
+        assertThat(argument.getValue().getName(), is("HTTP Request"));
+        assertTrue(argument.getValue().getResponseHeader().contains("Content-Length: 9535"));
     }
 
     @Test

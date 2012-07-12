@@ -11,6 +11,7 @@ import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.ui.TabbedPaneWrapper;
 import idea.plugin.jmeter.domain.Assertion;
 import idea.plugin.jmeter.domain.SampleResult;
+import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,7 +21,8 @@ import java.io.File;
 public class JmeterConsoleView extends JSplitPane implements ConsoleView, DataProvider {
     private final File logFile;
     private final JmeterTreeView treeView;
-    private final JTextArea samplerData;
+    private final JTextArea samplerResult;
+    private final JTextArea request;
     private final JTextArea responseData;
 
     public JmeterConsoleView(File logFile) {
@@ -32,12 +34,14 @@ public class JmeterConsoleView extends JSplitPane implements ConsoleView, DataPr
         treeView = new JmeterTreeView(this);
         add(new JScrollPane(treeView));
 
-        samplerData = new JTextArea();
+        samplerResult = new JTextArea();
+        request = new JTextArea();
         responseData = new JTextArea();
 
         TabbedPaneWrapper tabbedPane = new TabbedPaneWrapper(this);
-        tabbedPane.insertTab("Request", null, new JScrollPane(samplerData), null, 0);
-        tabbedPane.insertTab("Response Data", null, new JScrollPane(responseData), null, 1);
+        tabbedPane.insertTab("Sampler result", null, new JScrollPane(samplerResult), null, 0);
+        tabbedPane.insertTab("Request", null, new JScrollPane(request), null, 1);
+        tabbedPane.insertTab("Response Data", null, new JScrollPane(responseData), null, 2);
         add(tabbedPane.getComponent());
 
         setDividerLocation(500);
@@ -49,7 +53,8 @@ public class JmeterConsoleView extends JSplitPane implements ConsoleView, DataPr
 
     @Override
     public void clear() {
-        samplerData.setText("");
+        samplerResult.setText("");
+        request.setText("");
         responseData.setText("");
         treeView.clear();
     }
@@ -120,7 +125,7 @@ public class JmeterConsoleView extends JSplitPane implements ConsoleView, DataPr
 
     @Override
     public JComponent getPreferredFocusableComponent() {
-        return samplerData;
+        return samplerResult;
     }
 
     @Override
@@ -142,12 +147,22 @@ public class JmeterConsoleView extends JSplitPane implements ConsoleView, DataPr
     }
 
     public void onAssertionSelected(Assertion assertion) {
-        samplerData.setText(assertion.getFailureMessage());
+        samplerResult.setText(assertion.getFailureMessage());
+        request.setText("");
         responseData.setText("");
     }
 
     public void onSampleResultSelected(SampleResult sampleResult) {
-        samplerData.setText(sampleResult.getSamplerData());
+        StringBuilder sb = new StringBuilder();
+        if (!StringUtils.isBlank(sampleResult.getResponseHeader())) {
+            sb.append("Response headers:\n");
+            sb.append(sampleResult.getResponseHeader());
+        }
+        if (!StringUtils.isBlank(sampleResult.getSamplerData())) {
+            sb.append(sampleResult.getSamplerData());
+        }
+        this.samplerResult.setText(sb.toString());
+        request.setText("");
         responseData.setText(sampleResult.getResponseData());
     }
 }

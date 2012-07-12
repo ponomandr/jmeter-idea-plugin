@@ -78,6 +78,10 @@ public class JmeterXmlParser {
                 sampleResult.setSamplerData(tagBody);
             }
 
+            if (path.is("/testResults/*/responseHeader")) {
+                sampleResult.setResponseHeader(tagBody);
+            }
+
             if (path.is("/testResults/*/responseData")) {
                 sampleResult.setResponseData(tagBody);
             }

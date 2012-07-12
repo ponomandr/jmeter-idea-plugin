@@ -1,7 +1,5 @@
 package idea.plugin.jmeter.domain;
 
-import org.jetbrains.annotations.Nullable;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,15 +8,9 @@ public class SampleResult {
     private String samplerData;
     private String responseData;
     private List<Assertion> assertions = new ArrayList<Assertion>();
+    private String responseHeader;
 
     public SampleResult() {
-    }
-
-    public SampleResult(String sampleName, @Nullable String samplerData, @Nullable String responseData, List<Assertion> assertions) {
-        this.name = sampleName;
-        this.samplerData = samplerData;
-        this.responseData = responseData;
-        this.assertions.addAll(assertions);
     }
 
 
@@ -63,6 +55,14 @@ public class SampleResult {
 
     public void addAssertion(Assertion assertion) {
         assertions.add(assertion);
+    }
+
+    public String getResponseHeader() {
+        return responseHeader;
+    }
+
+    public void setResponseHeader(String responseHeader) {
+        this.responseHeader = responseHeader;
     }
 
     public enum State {
