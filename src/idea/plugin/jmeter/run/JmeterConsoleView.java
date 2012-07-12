@@ -153,16 +153,25 @@ public class JmeterConsoleView extends JSplitPane implements ConsoleView, DataPr
     }
 
     public void onSampleResultSelected(SampleResult sampleResult) {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder samplerContent = new StringBuilder();
         if (!StringUtils.isBlank(sampleResult.getResponseHeader())) {
-            sb.append("Response headers:\n");
-            sb.append(sampleResult.getResponseHeader());
+            samplerContent.append("Response headers:\n");
+            samplerContent.append(sampleResult.getResponseHeader());
+            samplerContent.append('\n');
         }
         if (!StringUtils.isBlank(sampleResult.getSamplerData())) {
-            sb.append(sampleResult.getSamplerData());
+            samplerContent.append(sampleResult.getSamplerData());
         }
-        this.samplerResult.setText(sb.toString());
-        request.setText("");
+        this.samplerResult.setText(samplerContent.toString());
+
+        StringBuilder requestContent = new StringBuilder();
+        if (!StringUtils.isBlank(sampleResult.getRequestHeader())) {
+            requestContent.append("Request headers:\n");
+            requestContent.append(sampleResult.getRequestHeader());
+            requestContent.append('\n');
+        }
+        request.setText(requestContent.toString());
+
         responseData.setText(sampleResult.getResponseData());
     }
 }

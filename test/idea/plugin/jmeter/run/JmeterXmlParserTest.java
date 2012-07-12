@@ -75,6 +75,30 @@ public class JmeterXmlParserTest {
     }
 
     @Test
+    public void testParseHttpSampleWithRequestHeaders() {
+        // Given
+        String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<testResults version=\"1.2\">\n" +
+                "<httpSample t=\"6973\" lt=\"6611\" ts=\"1341770750464\" s=\"false\" lb=\"HTTP Request\" rc=\"200\" rm=\"OK\" tn=\"Thread Group 1-1\" dt=\"text\" by=\"36433\">\n" +
+                "  <method class=\"java.lang.String\">GET</method>\n" +
+                "  <requestHeader class=\"java.lang.String\">Connection: close\n" +
+                "  </requestHeader>\n" +
+                "  <queryString class=\"java.lang.String\"></queryString>\n" +
+                "</httpSample>\n" +
+                "</testResults>";
+        JmeterXmlParser parser = new JmeterXmlParser(toInputStream(xml), consoleView);
+
+        // When
+        parser.parse();
+
+        // Then
+        ArgumentCaptor<SampleResult> argument = ArgumentCaptor.forClass(SampleResult.class);
+        verify(consoleView).addSampleResult(argument.capture());
+
+        assertTrue(argument.getValue().getRequestHeader().contains("Connection: close"));
+    }
+
+    @Test
     public void testParseHttpSampleWithResponseHeaders() {
         // Given
         String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +

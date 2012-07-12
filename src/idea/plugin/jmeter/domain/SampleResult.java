@@ -4,15 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SampleResult {
+
+    public enum State {
+        failed, error, success
+    }
+
     private String name;
     private String samplerData;
     private String responseData;
-    private List<Assertion> assertions = new ArrayList<Assertion>();
     private String responseHeader;
-
-    public SampleResult() {
-    }
-
+    private String requestHeader;
+    private List<Assertion> assertions = new ArrayList<Assertion>();
 
     public String getName() {
         return name;
@@ -38,8 +40,28 @@ public class SampleResult {
         this.responseData = responseData;
     }
 
+    public String getResponseHeader() {
+        return responseHeader;
+    }
+
+    public void setResponseHeader(String responseHeader) {
+        this.responseHeader = responseHeader;
+    }
+
+    public String getRequestHeader() {
+        return requestHeader;
+    }
+
+    public void setRequestHeader(String requestHeader) {
+        this.requestHeader = requestHeader;
+    }
+
     public List<Assertion> getAssertions() {
         return assertions;
+    }
+
+    public void addAssertion(Assertion assertion) {
+        assertions.add(assertion);
     }
 
     public State getState() {
@@ -51,21 +73,5 @@ public class SampleResult {
             hasFailures |= (assertion.getState() == State.failed);
         }
         return hasFailures ? State.failed : State.success;
-    }
-
-    public void addAssertion(Assertion assertion) {
-        assertions.add(assertion);
-    }
-
-    public String getResponseHeader() {
-        return responseHeader;
-    }
-
-    public void setResponseHeader(String responseHeader) {
-        this.responseHeader = responseHeader;
-    }
-
-    public enum State {
-        failed, error, success
     }
 }
