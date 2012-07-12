@@ -152,26 +152,43 @@ public class JmeterConsoleView extends JSplitPane implements ConsoleView, DataPr
         responseData.setText("");
     }
 
-    public void onSampleResultSelected(SampleResult sampleResult) {
+    public void onSampleResultSelected(SampleResult result) {
         StringBuilder samplerContent = new StringBuilder();
-        if (!StringUtils.isBlank(sampleResult.getResponseHeader())) {
-            samplerContent.append("Response headers:\n");
-            samplerContent.append(sampleResult.getResponseHeader());
+        samplerContent.append("Response code: ");
+        samplerContent.append(result.getResponseCode());
+        samplerContent.append(' ');
+        samplerContent.append(result.getResponseMessage());
+        samplerContent.append('\n');
+
+        if (!StringUtils.isBlank(result.getResponseHeader())) {
+            samplerContent.append("\nResponse headers:\n");
+            samplerContent.append(result.getResponseHeader());
             samplerContent.append('\n');
         }
-        if (!StringUtils.isBlank(sampleResult.getSamplerData())) {
-            samplerContent.append(sampleResult.getSamplerData());
+        if (!StringUtils.isBlank(result.getSamplerData())) {
+            samplerContent.append(result.getSamplerData());
         }
-        this.samplerResult.setText(samplerContent.toString());
+        samplerResult.setText(samplerContent.toString());
 
         StringBuilder requestContent = new StringBuilder();
-        if (!StringUtils.isBlank(sampleResult.getRequestHeader())) {
+        requestContent.append(result.getMethod());
+        requestContent.append(' ');
+        requestContent.append(result.getUrl());
+        requestContent.append("\n\n");
+
+        if (!StringUtils.isBlank(result.getRequestHeader())) {
+            requestContent.append("Cookies:\n");
+            requestContent.append(result.getCookies());
+            requestContent.append('\n');
+        }
+
+        if (!StringUtils.isBlank(result.getRequestHeader())) {
             requestContent.append("Request headers:\n");
-            requestContent.append(sampleResult.getRequestHeader());
+            requestContent.append(result.getRequestHeader());
             requestContent.append('\n');
         }
         request.setText(requestContent.toString());
 
-        responseData.setText(sampleResult.getResponseData());
+        responseData.setText(result.getResponseData());
     }
 }

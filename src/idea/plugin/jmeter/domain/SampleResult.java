@@ -11,9 +11,14 @@ public class SampleResult {
 
     private String name;
     private String samplerData;
+    private String responseCode;
+    private String responseMessage;
     private String responseData;
     private String responseHeader;
     private String requestHeader;
+    private String method;
+    private String url;
+    private String cookies;
     private List<Assertion> assertions = new ArrayList<Assertion>();
 
     public String getName() {
@@ -30,6 +35,22 @@ public class SampleResult {
 
     public void setSamplerData(String samplerData) {
         this.samplerData = samplerData;
+    }
+
+    public String getResponseCode() {
+        return responseCode;
+    }
+
+    public void setResponseCode(String responseCode) {
+        this.responseCode = responseCode;
+    }
+
+    public String getResponseMessage() {
+        return responseMessage;
+    }
+
+    public void setResponseMessage(String responseMessage) {
+        this.responseMessage = responseMessage;
     }
 
     public String getResponseData() {
@@ -54,6 +75,30 @@ public class SampleResult {
 
     public void setRequestHeader(String requestHeader) {
         this.requestHeader = requestHeader;
+    }
+
+    public String getMethod() {
+        return method;
+    }
+
+    public void setMethod(String method) {
+        this.method = method;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getCookies() {
+        return cookies;
+    }
+
+    public void setCookies(String cookies) {
+        this.cookies = cookies;
     }
 
     public List<Assertion> getAssertions() {

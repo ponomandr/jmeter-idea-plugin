@@ -20,7 +20,7 @@ public class JmeterXmlParserTest {
     private JmeterConsoleView consoleView = mock(JmeterConsoleView.class);
 
     @Test
-    public void testParseSamplerData() {
+    public void testParseSample() {
         // Given
         String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
                 "<testResults version=\"1.2\">\n" +
@@ -40,6 +40,38 @@ public class JmeterXmlParserTest {
         assertThat(argument.getValue().getName(), is("Login as u1"));
         assertThat(argument.getValue().getSamplerData(), is("Login as u1 with password p1"));
         assertThat(argument.getValue().getResponseData(), nullValue());
+    }
+
+    @Test
+    public void testParseHttpSample() {
+        // Given
+        String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<testResults version=\"1.2\">\n" +
+                "<httpSample t=\"6973\" lt=\"6611\" ts=\"1341770750464\" s=\"false\" lb=\"HTTP Request\" rc=\"200\" rm=\"OK\" tn=\"Thread Group 1-1\" dt=\"text\" by=\"36433\">\n" +
+                "  <method class=\"java.lang.String\">GET</method>\n" +
+                "  <requestHeader class=\"java.lang.String\">Connection: close\n" +
+                "  </requestHeader>\n" +
+                "  <cookies class=\"java.lang.String\"></cookies>\n" +
+                "  <queryString class=\"java.lang.String\"></queryString>\n" +
+                "  <java.net.URL>http://jmeter.apache.org/</java.net.URL>" +
+                "</httpSample>\n" +
+                "</testResults>";
+        JmeterXmlParser parser = new JmeterXmlParser(toInputStream(xml), consoleView);
+
+        // When
+        parser.parse();
+
+        // Then
+        ArgumentCaptor<SampleResult> argument = ArgumentCaptor.forClass(SampleResult.class);
+        verify(consoleView).addSampleResult(argument.capture());
+
+        SampleResult result = argument.getValue();
+        assertThat(result.getResponseCode(), is("200"));
+        assertThat(result.getResponseMessage(), is("OK"));
+        assertThat(result.getMethod(), is("GET"));
+        assertThat(result.getUrl(), is("http://jmeter.apache.org/"));
+        assertThat(result.getCookies(), is(""));
+        assertTrue(result.getRequestHeader().contains("Connection: close"));
     }
 
     @Test
@@ -72,30 +104,6 @@ public class JmeterXmlParserTest {
         assertThat(assertion.getName(), is("Response Assertion"));
         assertThat(assertion.getState(), is(SampleResult.State.failed));
         assertThat(assertion.getFailureMessage(), is("Test failed: text expected to contain /1Apache Software Foundation/"));
-    }
-
-    @Test
-    public void testParseHttpSampleWithRequestHeaders() {
-        // Given
-        String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<testResults version=\"1.2\">\n" +
-                "<httpSample t=\"6973\" lt=\"6611\" ts=\"1341770750464\" s=\"false\" lb=\"HTTP Request\" rc=\"200\" rm=\"OK\" tn=\"Thread Group 1-1\" dt=\"text\" by=\"36433\">\n" +
-                "  <method class=\"java.lang.String\">GET</method>\n" +
-                "  <requestHeader class=\"java.lang.String\">Connection: close\n" +
-                "  </requestHeader>\n" +
-                "  <queryString class=\"java.lang.String\"></queryString>\n" +
-                "</httpSample>\n" +
-                "</testResults>";
-        JmeterXmlParser parser = new JmeterXmlParser(toInputStream(xml), consoleView);
-
-        // When
-        parser.parse();
-
-        // Then
-        ArgumentCaptor<SampleResult> argument = ArgumentCaptor.forClass(SampleResult.class);
-        verify(consoleView).addSampleResult(argument.capture());
-
-        assertTrue(argument.getValue().getRequestHeader().contains("Connection: close"));
     }
 
     @Test

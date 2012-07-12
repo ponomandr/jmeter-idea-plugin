@@ -46,6 +46,8 @@ public class JmeterXmlParser {
             if (path.is("/testResults/sample") || path.is("/testResults/httpSample")) {
                 sampleResult = new SampleResult();
                 sampleResult.setName(attributes.getValue("lb"));
+                sampleResult.setResponseCode(attributes.getValue("rc"));
+                sampleResult.setResponseMessage(attributes.getValue("rm"));
             }
 
             if (path.is("/testResults/*/assertionResult")) {
@@ -76,6 +78,18 @@ public class JmeterXmlParser {
 
             if (path.is("/testResults/*/samplerData")) {
                 sampleResult.setSamplerData(tagBody);
+            }
+
+            if (path.is("/testResults/*/method")) {
+                sampleResult.setMethod(tagBody);
+            }
+
+            if (path.is("/testResults/*/java.net.URL")) {
+                sampleResult.setUrl(tagBody);
+            }
+
+            if (path.is("/testResults/*/cookies")) {
+                sampleResult.setCookies(tagBody);
             }
 
             if (path.is("/testResults/*/requestHeader")) {
