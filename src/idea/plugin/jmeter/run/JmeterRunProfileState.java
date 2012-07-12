@@ -68,10 +68,36 @@ class JmeterRunProfileState extends JavaCommandLineState {
         if (runConfiguration.isNonguiMode()) {
             programParameters.add("--logfile", logFile.getAbsolutePath());
             programParameters.add("--nongui");
+            programParameters.add("-J", "jmeter.save.saveservice.assertion_results_failure_message=true");
+            programParameters.add("-J", "jmeter.save.saveservice.assertion_results=true");
             programParameters.add("-J", "jmeter.save.saveservice.assertions=true");
-            programParameters.add("-J", "jmeter.save.saveservice.samplerData=true");
-            programParameters.add("-J", "jmeter.save.saveservice.url=true");
+//            programParameters.add("-J", "jmeter.save.saveservice.bytes=true");
+//            programParameters.add("-J", "jmeter.save.saveservice.data_type=true");
+//            programParameters.add("-J", "jmeter.save.saveservice.default_delimiter=true");
+//            programParameters.add("-J", "jmeter.save.saveservice.encoding=true");
+//            programParameters.add("-J", "jmeter.save.saveservice.filename=true");
+//            programParameters.add("-J", "jmeter.save.saveservice.hostname=true");
+//            programParameters.add("-J", "jmeter.save.saveservice.idle_time=true");
+            programParameters.add("-J", "jmeter.save.saveservice.label=true");
+//            programParameters.add("-J", "jmeter.save.saveservice.latency=true");
+//            programParameters.add("-J", "jmeter.save.saveservice.output_format=true");
+//            programParameters.add("-J", "jmeter.save.saveservice.print_field_names=true");
+            programParameters.add("-J", "jmeter.save.saveservice.requestHeaders=true");
+            programParameters.add("-J", "jmeter.save.saveservice.response_code=true");
+//            programParameters.add("-J", "jmeter.save.saveservice.response_data.on_error=true");
             programParameters.add("-J", "jmeter.save.saveservice.response_data=true");
+            programParameters.add("-J", "jmeter.save.saveservice.responseHeaders=true");
+            programParameters.add("-J", "jmeter.save.saveservice.response_message=true");
+//            programParameters.add("-J", "jmeter.save.saveservice.sample_count=true");
+            programParameters.add("-J", "jmeter.save.saveservice.samplerData=true");
+            programParameters.add("-J", "jmeter.save.saveservice.subresults=true");
+//            programParameters.add("-J", "jmeter.save.saveservice.successful=true");
+//            programParameters.add("-J", "jmeter.save.saveservice.thread_counts=true");
+            programParameters.add("-J", "jmeter.save.saveservice.thread_name=true");
+//            programParameters.add("-J", "jmeter.save.saveservice.timestamp_format=true");
+//            programParameters.add("-J", "jmeter.save.saveservice.time=true");
+            programParameters.add("-J", "jmeter.save.saveservice.url=true");
+//            programParameters.add("-J", "jmeter.save.saveservice.xml_pi=true");
         }
 
         return parameters;

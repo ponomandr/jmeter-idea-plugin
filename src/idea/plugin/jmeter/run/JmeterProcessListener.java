@@ -70,6 +70,7 @@ class JmeterProcessListener extends ProcessAdapter {
         @Override
         public void handle(String line) {
             try {
+                System.err.println(line);
                 line = XmlHack.encode(line);
                 outputStream.write(line.getBytes());
                 outputStream.write("\n".getBytes());
