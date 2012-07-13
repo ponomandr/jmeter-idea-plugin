@@ -49,7 +49,11 @@ public class JmeterXmlParser {
                 sampleResult.setName(attributes.getValue("lb"));
                 sampleResult.setThreadName(attributes.getValue("tn"));
                 sampleResult.setSampleStart(new Date(Long.valueOf(attributes.getValue("ts"))));
-                sampleResult.setLoadTime(attributes.getValue("lt"));
+                sampleResult.setLoadTime(attributes.getValue("t"));
+                sampleResult.setLatency(attributes.getValue("lt"));
+                sampleResult.setSizeInBytes(attributes.getValue("by"));
+                sampleResult.setSampleCount(attributes.getValue("sc"));
+                sampleResult.setErrorCount(attributes.getValue("ec"));
                 sampleResult.setResponseCode(attributes.getValue("rc"));
                 sampleResult.setResponseMessage(attributes.getValue("rm"));
             }

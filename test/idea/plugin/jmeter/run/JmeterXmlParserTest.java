@@ -25,7 +25,7 @@ public class JmeterXmlParserTest {
         // Given
         String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
                 "<testResults version=\"1.2\">\n" +
-                "<sample t=\"127\" lt=\"0\" ts=\"1341755332108\" s=\"true\" lb=\"Login as u1\" rc=\"200\" rm=\"OK\" tn=\"Thread Group 1-1\" dt=\"text\" by=\"15\">\n" +
+                "<sample t=\"127\" lt=\"0\" ts=\"1341755332108\" s=\"true\" lb=\"Login as u1\" rc=\"200\" rm=\"OK\" tn=\"Thread Group 1-1\" dt=\"text\" by=\"15\" sc=\"1\" ec=\"0\">\n" +
                 "  <samplerData class=\"java.lang.String\">Login as u1 with password p1</samplerData>\n" +
                 "</sample>\n" +
                 "</testResults>";
@@ -48,7 +48,7 @@ public class JmeterXmlParserTest {
         // Given
         String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
                 "<testResults version=\"1.2\">\n" +
-                "<httpSample t=\"6973\" lt=\"6611\" ts=\"1341770750464\" s=\"false\" lb=\"HTTP Request\" rc=\"200\" rm=\"OK\" tn=\"Thread Group 1-1\" dt=\"text\" by=\"36433\">\n" +
+                "<httpSample t=\"6973\" lt=\"6611\" ts=\"1341770750464\" s=\"false\" lb=\"HTTP Request\" rc=\"200\" rm=\"OK\" tn=\"Thread Group 1-1\" dt=\"text\" by=\"36433\" sc=\"1\" ec=\"0\">\n" +
                 "  <method class=\"java.lang.String\">GET</method>\n" +
                 "  <requestHeader class=\"java.lang.String\">Connection: close\n" +
                 "  </requestHeader>\n" +
@@ -68,8 +68,12 @@ public class JmeterXmlParserTest {
 
         SampleResult result = argument.getValue();
         assertThat(result.getThreadName(), is("Thread Group 1-1"));
-        assertThat(result.getLoadTime(), is("6611"));
+        assertThat(result.getLoadTime(), is("6973"));
+        assertThat(result.getLatency(), is("6611"));
+        assertThat(result.getSizeInBytes(), is("36433"));
         assertThat(result.getSampleStart(), is(new Date(1341770750464L)));
+        assertThat(result.getSampleCount(), is("1"));
+        assertThat(result.getErrorCount(), is("0"));
         assertThat(result.getResponseCode(), is("200"));
         assertThat(result.getResponseMessage(), is("OK"));
         assertThat(result.getMethod(), is("GET"));

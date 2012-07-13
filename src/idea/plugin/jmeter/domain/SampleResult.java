@@ -14,6 +14,10 @@ public class SampleResult {
     private String threadName;
     private Date sampleStart;
     private String loadTime;
+    private String latency;
+    private String sizeInBytes;
+    private String sampleCount;
+    private String errorCount;
     private String samplerData;
     private String responseCode;
     private String responseMessage;
@@ -55,6 +59,38 @@ public class SampleResult {
 
     public void setLoadTime(String loadTime) {
         this.loadTime = loadTime;
+    }
+
+    public String getLatency() {
+        return latency;
+    }
+
+    public void setLatency(String latency) {
+        this.latency = latency;
+    }
+
+    public String getSampleCount() {
+        return sampleCount;
+    }
+
+    public String getSizeInBytes() {
+        return sizeInBytes;
+    }
+
+    public void setSizeInBytes(String sizeInBytes) {
+        this.sizeInBytes = sizeInBytes;
+    }
+
+    public void setSampleCount(String sampleCount) {
+        this.sampleCount = sampleCount;
+    }
+
+    public String getErrorCount() {
+        return errorCount;
+    }
+
+    public void setErrorCount(String errorCount) {
+        this.errorCount = errorCount;
     }
 
     public String getSamplerData() {

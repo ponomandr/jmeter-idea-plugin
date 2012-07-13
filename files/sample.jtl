@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testResults version="1.2">
-    <httpSample t="803" lt="602" ts="1342124721061" s="true" lb="HTTP Request" rc="200" rm="OK" tn="Thread Group 1-2"
-                dt="text" by="9835">
+    <httpSample t="594" lt="405" ts="1342159190784" s="true" lb="HTTP Request" rc="200" rm="OK" tn="Thread Group 1-1"
+                dt="text" by="9835" sc="1" ec="0">
         <assertionResult>
             <name>Response Assertion</name>
             <failure>false</failure>
@@ -35,8 +35,8 @@
         <queryString class="java.lang.String"></queryString>
         <java.net.URL>http://jmeter.apache.org/</java.net.URL>
     </httpSample>
-    <httpSample t="1116" lt="920" ts="1342124720743" s="true" lb="HTTP Request" rc="200" rm="OK" tn="Thread Group 1-1"
-                dt="text" by="9835">
+    <httpSample t="581" lt="389" ts="1342159191103" s="true" lb="HTTP Request" rc="200" rm="OK" tn="Thread Group 1-2"
+                dt="text" by="9835" sc="1" ec="0">
         <assertionResult>
             <name>Response Assertion</name>
             <failure>false</failure>
@@ -70,8 +70,8 @@
         <queryString class="java.lang.String"></queryString>
         <java.net.URL>http://jmeter.apache.org/</java.net.URL>
     </httpSample>
-    <httpSample t="581" lt="388" ts="1342124721394" s="true" lb="HTTP Request" rc="200" rm="OK" tn="Thread Group 1-3"
-                dt="text" by="9835">
+    <httpSample t="580" lt="384" ts="1342159191421" s="false" lb="HTTP Request" rc="200" rm="OK" tn="Thread Group 1-1"
+                dt="text" by="9835" sc="1" ec="1">
         <assertionResult>
             <name>Response Assertion</name>
             <failure>false</failure>
@@ -105,8 +105,8 @@
         <queryString class="java.lang.String"></queryString>
         <java.net.URL>http://jmeter.apache.org/</java.net.URL>
     </httpSample>
-    <httpSample t="584" lt="391" ts="1342124721881" s="false" lb="HTTP Request" rc="200" rm="OK" tn="Thread Group 1-2"
-                dt="text" by="9835">
+    <httpSample t="576" lt="384" ts="1342159191436" s="true" lb="HTTP Request" rc="200" rm="OK" tn="Thread Group 1-3"
+                dt="text" by="9835" sc="1" ec="0">
         <assertionResult>
             <name>Response Assertion</name>
             <failure>true</failure>
@@ -145,8 +145,8 @@
         <queryString class="java.lang.String"></queryString>
         <java.net.URL>http://jmeter.apache.org/</java.net.URL>
     </httpSample>
-    <httpSample t="580" lt="385" ts="1342124721889" s="false" lb="HTTP Request" rc="200" rm="OK" tn="Thread Group 1-1"
-                dt="text" by="9835">
+    <httpSample t="579" lt="386" ts="1342159191685" s="false" lb="HTTP Request" rc="200" rm="OK" tn="Thread Group 1-2"
+                dt="text" by="9835" sc="1" ec="1">
         <assertionResult>
             <name>Response Assertion</name>
             <failure>true</failure>
@@ -182,8 +182,8 @@
         <queryString class="java.lang.String"></queryString>
         <java.net.URL>http://jmeter.apache.org/</java.net.URL>
     </httpSample>
-    <httpSample t="595" lt="394" ts="1342124721976" s="false" lb="HTTP Request" rc="200" rm="OK" tn="Thread Group 1-3"
-                dt="text" by="9835">
+    <httpSample t="578" lt="382" ts="1342159192016" s="false" lb="HTTP Request" rc="200" rm="OK" tn="Thread Group 1-3"
+                dt="text" by="9835" sc="1" ec="1">
         <assertionResult>
             <name>Response Assertion</name>
             <failure>true</failure>
