@@ -1,3 +1,5 @@
+Assertion is empty when OK
+Do not show binary data in the console
 Data shown in the result tree should be the same as JMeter GUI
 Try to use xstream instead of SAX
 Handle gracefully "premature end of file" exception
