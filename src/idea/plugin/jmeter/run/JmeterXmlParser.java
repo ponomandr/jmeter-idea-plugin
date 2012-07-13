@@ -12,6 +12,7 @@ import org.xml.sax.helpers.DefaultHandler;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import java.io.InputStream;
+import java.util.Date;
 
 public class JmeterXmlParser {
 
@@ -46,6 +47,9 @@ public class JmeterXmlParser {
             if (path.is("/testResults/sample") || path.is("/testResults/httpSample")) {
                 sampleResult = new SampleResult();
                 sampleResult.setName(attributes.getValue("lb"));
+                sampleResult.setThreadName(attributes.getValue("tn"));
+                sampleResult.setSampleStart(new Date(Long.valueOf(attributes.getValue("ts"))));
+                sampleResult.setLoadTime(attributes.getValue("lt"));
                 sampleResult.setResponseCode(attributes.getValue("rc"));
                 sampleResult.setResponseMessage(attributes.getValue("rm"));
             }

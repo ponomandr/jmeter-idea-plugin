@@ -154,14 +154,23 @@ public class JmeterConsoleView extends JSplitPane implements ConsoleView, DataPr
 
     public void onSampleResultSelected(SampleResult result) {
         StringBuilder samplerContent = new StringBuilder();
-        samplerContent.append("Response code: ");
+        samplerContent.append("Thread Name: ");
+        samplerContent.append(result.getThreadName());
+        samplerContent.append('\n');
+        samplerContent.append("Sample Start: ");
+        samplerContent.append(result.getSampleStart());
+        samplerContent.append('\n');
+        samplerContent.append("Load time: ");
+        samplerContent.append(result.getLoadTime());
+        samplerContent.append('\n');
+        samplerContent.append("Response Code: ");
         samplerContent.append(result.getResponseCode());
         samplerContent.append(' ');
         samplerContent.append(result.getResponseMessage());
         samplerContent.append('\n');
 
         if (!StringUtils.isBlank(result.getResponseHeader())) {
-            samplerContent.append("\nResponse headers:\n");
+            samplerContent.append("\nResponse Headers:\n");
             samplerContent.append(result.getResponseHeader());
             samplerContent.append('\n');
         }
@@ -183,7 +192,7 @@ public class JmeterConsoleView extends JSplitPane implements ConsoleView, DataPr
         }
 
         if (!StringUtils.isBlank(result.getRequestHeader())) {
-            requestContent.append("Request headers:\n");
+            requestContent.append("Request Headers:\n");
             requestContent.append(result.getRequestHeader());
             requestContent.append('\n');
         }

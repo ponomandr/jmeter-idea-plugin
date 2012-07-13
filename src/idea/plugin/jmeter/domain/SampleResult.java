@@ -1,6 +1,7 @@
 package idea.plugin.jmeter.domain;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class SampleResult {
@@ -10,6 +11,9 @@ public class SampleResult {
     }
 
     private String name;
+    private String threadName;
+    private Date sampleStart;
+    private String loadTime;
     private String samplerData;
     private String responseCode;
     private String responseMessage;
@@ -27,6 +31,30 @@ public class SampleResult {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getThreadName() {
+        return threadName;
+    }
+
+    public void setThreadName(String threadName) {
+        this.threadName = threadName;
+    }
+
+    public Date getSampleStart() {
+        return sampleStart;
+    }
+
+    public void setSampleStart(Date sampleStart) {
+        this.sampleStart = sampleStart;
+    }
+
+    public String getLoadTime() {
+        return loadTime;
+    }
+
+    public void setLoadTime(String loadTime) {
+        this.loadTime = loadTime;
     }
 
     public String getSamplerData() {

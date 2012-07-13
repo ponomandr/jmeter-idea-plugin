@@ -7,6 +7,7 @@ import org.mockito.ArgumentCaptor;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.Date;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -66,6 +67,9 @@ public class JmeterXmlParserTest {
         verify(consoleView).addSampleResult(argument.capture());
 
         SampleResult result = argument.getValue();
+        assertThat(result.getThreadName(), is("Thread Group 1-1"));
+        assertThat(result.getLoadTime(), is("6611"));
+        assertThat(result.getSampleStart(), is(new Date(1341770750464L)));
         assertThat(result.getResponseCode(), is("200"));
         assertThat(result.getResponseMessage(), is("OK"));
         assertThat(result.getMethod(), is("GET"));
