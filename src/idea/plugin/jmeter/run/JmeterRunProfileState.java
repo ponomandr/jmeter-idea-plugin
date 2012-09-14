@@ -44,6 +44,7 @@ class JmeterRunProfileState extends JavaCommandLineState {
         for (Map.Entry<String, String> entry : runConfiguration.getProperties().entrySet()) {
             programParameters.add("-J", entry.getKey() + "=" + entry.getValue());
         }
+        parameters.getVMParametersList().addParametersString(runConfiguration.getJvmParameters());
         programParameters.addParametersString(runConfiguration.getCustomParameters());
         return parameters;
     }

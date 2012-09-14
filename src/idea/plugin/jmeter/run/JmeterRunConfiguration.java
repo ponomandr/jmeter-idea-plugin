@@ -24,6 +24,7 @@ public class JmeterRunConfiguration extends RunConfigurationBase implements Loca
     private String testFile;
     private String propertyFile;
     private LinkedHashMap<String, String> properties = new LinkedHashMap<String, String>();
+    private String jvmParameters;
     private String customParameters;
     private String workingDirectory;
 
@@ -71,6 +72,7 @@ public class JmeterRunConfiguration extends RunConfigurationBase implements Loca
         super.writeExternal(element);
         JDOMExternalizer.write(element, "testFile", testFile);
         JDOMExternalizer.write(element, "propertyFile", propertyFile);
+        JDOMExternalizer.write(element, "jvmParameters", jvmParameters);
         JDOMExternalizer.write(element, "customParameters", customParameters);
         JDOMExternalizer.write(element, "workingDirectory", workingDirectory);
         JDOMExternalizer.writeMap(element, properties, "properties", "property");
@@ -81,6 +83,7 @@ public class JmeterRunConfiguration extends RunConfigurationBase implements Loca
         super.readExternal(element);
         testFile = JDOMExternalizer.readString(element, "testFile");
         propertyFile = JDOMExternalizer.readString(element, "propertyFile");
+        jvmParameters = JDOMExternalizer.readString(element, "jvmParameters");
         customParameters = JDOMExternalizer.readString(element, "customParameters");
         workingDirectory = JDOMExternalizer.readString(element, "workingDirectory");
 
@@ -111,6 +114,14 @@ public class JmeterRunConfiguration extends RunConfigurationBase implements Loca
 
     public void setProperties(LinkedHashMap<String, String> properties) {
         this.properties = properties;
+    }
+
+    public String getJvmParameters() {
+        return jvmParameters;
+    }
+
+    public void setJvmParameters(String jvmParameters) {
+        this.jvmParameters = jvmParameters;
     }
 
     public String getCustomParameters() {
