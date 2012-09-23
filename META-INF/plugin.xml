@@ -1,7 +1,7 @@
 <idea-plugin version="2" url="https://github.com/ponomandr/jmeter-idea-plugin">
     <name>JMeter plugin</name>
     <description>Create run configurations and run JMeter tests from Intellij IDEA.</description>
-    <version>1.4-SNAPSHOT</version>
+    <version>1.4</version>
     <vendor>Andrey Ponomarev</vendor>
     <category>Tools Integration</category>
 
@@ -27,6 +27,11 @@
 
     <change-notes>
         <![CDATA[
+        <h4>Changes in 1.4</h4>
+        <ul>
+            <li>New run configuration parameter: JVM parameters</ul>
+            <li>Syntax highlighting for .jmx files</ul>
+        </ul>
         <h4>Changes in 1.3</h4>
         <ul>
             <li>Add jmeter.properties, system.properties, user.properties files to a new run configuration if they exist in the test file folder</ul>
