@@ -17,6 +17,7 @@ public class JmeterRunConfigurationForm {
     private TextFieldWithBrowseButton testFile;
     private TextFieldWithBrowseButton propertyFile;
     private PropertyTable propertyTable;
+    private JTextField jvmParameters;
     private JTextField customParameters;
     private TextFieldWithBrowseButton workingDirectory;
 
@@ -78,6 +79,14 @@ public class JmeterRunConfigurationForm {
 
     public void setProperties(Map<String, String> properties) {
         propertyTable.setProperties(properties);
+    }
+
+    public String getJvmParameters() {
+        return jvmParameters.getText();
+    }
+
+    public void setJvmParameters(String jvmParameters) {
+        this.jvmParameters.setText(jvmParameters);
     }
 
     public String getCustomParameters() {
