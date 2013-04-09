@@ -60,5 +60,10 @@ public class PropertyTable extends JPanel {
         public void exchangeRows(int oldIndex, int newIndex) {
             moveRow(oldIndex, oldIndex, newIndex);
         }
+
+        @Override
+        public boolean canExchangeRows(int oldIndex, int newIndex) {
+            return true;
+        }
     }
 }
