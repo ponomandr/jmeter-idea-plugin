@@ -22,7 +22,7 @@ public class JmeterSettingsForm {
         jmeterHome.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                VirtualFile file = FileChooser.chooseFile(project, FileChooserDescriptorFactory.createSingleFolderDescriptor());
+                VirtualFile file = FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFolderDescriptor(), project, null);
                 if (file != null) {
                     jmeterHome.setText(file.getPath());
                 }
