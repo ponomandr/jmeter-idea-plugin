@@ -4,11 +4,9 @@ import com.intellij.execution.ExecutionException;
 import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.*;
 import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.execution.runners.ProgramRunner;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.JDOMExternalizable;
 import com.intellij.openapi.util.JDOMExternalizer;
 import com.intellij.openapi.util.WriteExternalException;
 import idea.plugin.jmeter.settings.JmeterSettings;
@@ -32,19 +30,10 @@ public class JmeterRunConfiguration extends RunConfigurationBase implements Loca
         super(project, configurationFactory, "");
     }
 
+    @NotNull
     @Override
     public SettingsEditor<? extends RunConfiguration> getConfigurationEditor() {
         return new JmeterRunConfigurationEditor(getProject());
-    }
-
-    @Override
-    public JDOMExternalizable createRunnerSettings(ConfigurationInfoProvider configurationInfoProvider) {
-        return null;
-    }
-
-    @Override
-    public SettingsEditor<JDOMExternalizable> getRunnerSettingsEditor(ProgramRunner programRunner) {
-        return null;
     }
 
     @Override

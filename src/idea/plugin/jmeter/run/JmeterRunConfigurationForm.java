@@ -25,7 +25,7 @@ public class JmeterRunConfigurationForm {
         testFile.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                VirtualFile file = FileChooser.chooseFile(project, FileChooserDescriptorFactory.createSingleLocalFileDescriptor());
+                VirtualFile file = FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleLocalFileDescriptor(), project, null);
                 if (file != null) {
                     testFile.setText(file.getPath());
                 }
@@ -35,7 +35,7 @@ public class JmeterRunConfigurationForm {
         propertyFile.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                VirtualFile file = FileChooser.chooseFile(project, FileChooserDescriptorFactory.createSingleLocalFileDescriptor());
+                VirtualFile file = FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleLocalFileDescriptor(), project, null);
                 if (file != null) {
                     propertyFile.setText(file.getPath());
                 }
@@ -45,7 +45,7 @@ public class JmeterRunConfigurationForm {
         workingDirectory.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                VirtualFile file = FileChooser.chooseFile(project, FileChooserDescriptorFactory.createSingleFolderDescriptor());
+                VirtualFile file = FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFolderDescriptor(), project, null);
                 if (file != null) {
                     workingDirectory.setText(file.getPath());
                 }

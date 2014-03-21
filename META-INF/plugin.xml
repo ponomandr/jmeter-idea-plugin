@@ -21,7 +21,7 @@
         <projectConfigurable instance="idea.plugin.jmeter.settings.JmeterSettingsConfigurable"/>
         <configurationType implementation="idea.plugin.jmeter.run.JmeterConfigurationType"/>
         <programRunner implementation="idea.plugin.jmeter.run.JmeterProgramRunner"/>
-        <configurationProducer implementation="idea.plugin.jmeter.JmeterConfigurationProducer"/>
+        <runConfigurationProducer implementation="idea.plugin.jmeter.run.JmeterRunConfigurationProducer"/>
         <syntaxHighlighter key="JMeter" implementationClass="com.intellij.ide.highlighter.XmlFileHighlighter"/>
     </extensions>
 
