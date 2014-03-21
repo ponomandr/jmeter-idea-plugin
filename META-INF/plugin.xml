@@ -16,6 +16,13 @@
         <!-- Add your project components here -->
     </project-components>
 
+    <actions>
+        <action id="CreateJmeterFile" class="idea.plugin.jmeter.actions.CreateJmeterFileAction" text="JMeter File"
+                description="Create new JMeter file">
+            <add-to-group group-id="NewGroup" anchor="last"/>
+        </action>
+    </actions>
+
     <extensions defaultExtensionNs="com.intellij">
         <fileTypeFactory implementation="idea.plugin.jmeter.JmeterFileTypeFactory"/>
         <projectConfigurable instance="idea.plugin.jmeter.settings.JmeterSettingsConfigurable"/>
