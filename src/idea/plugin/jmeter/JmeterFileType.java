@@ -1,6 +1,7 @@
 package idea.plugin.jmeter;
 
-import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.lang.xml.XMLLanguage;
+import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -8,9 +9,13 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
-public class JmeterFileType implements FileType {
+public class JmeterFileType extends LanguageFileType {
     public static final JmeterFileType INSTANCE = new JmeterFileType();
     public static final Icon FILE_ICON = IconLoader.getIcon("/icons/beaker.png");
+
+    public JmeterFileType() {
+        super(XMLLanguage.INSTANCE);
+    }
 
     @NotNull
     @Override
@@ -33,16 +38,6 @@ public class JmeterFileType implements FileType {
     @Override
     public Icon getIcon() {
         return FILE_ICON;
-    }
-
-    @Override
-    public boolean isBinary() {
-        return false;
-    }
-
-    @Override
-    public boolean isReadOnly() {
-        return false;
     }
 
     @Override
