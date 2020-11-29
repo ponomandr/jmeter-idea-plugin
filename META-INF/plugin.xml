@@ -1,12 +1,15 @@
-<idea-plugin version="2" url="https://github.com/ponomandr/jmeter-idea-plugin">
+<idea-plugin url="https://github.com/ponomandr/jmeter-idea-plugin">
     <name>JMeter plugin</name>
-    <description>Create run configurations and run JMeter tests from Intellij IDEA.</description>
+    <description><![CDATA[
+      <p>Create run configurations and run JMeter tests</p>
+      <p><a href="https://github.com/ponomandr/jmeter-idea-plugin">Source code on GitHub</a></p>
+    ]]></description>
     <version>1.6.1</version>
     <vendor>Andrey Ponomarev</vendor>
     <category>Tools Integration</category>
 
     <!-- please see http://confluence.jetbrains.net/display/IDEADEV/Build+Number+Ranges for description -->
-    <idea-version since-build="133.696"/>
+    <idea-version since-build="201"/>
 
     <application-components>
         <!-- Add your application components here -->
@@ -34,6 +37,10 @@
 
     <change-notes>
         <![CDATA[
+        <h4>Changes in 1.7</h4>
+        <ul>
+            <li>Upgraded to Intellij IDEA 2020.3</li>
+        </ul>
         <h4>Changes in 1.6</h4>
         <ul>
             <li>Upgraded to Intellij IDEA 13.1</li>
