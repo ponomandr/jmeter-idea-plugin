@@ -27,7 +27,7 @@
     </actions>
 
     <extensions defaultExtensionNs="com.intellij">
-        <fileTypeFactory implementation="idea.plugin.jmeter.JmeterFileTypeFactory"/>
+        <fileType name="JMeter" implementationClass="idea.plugin.jmeter.JmeterFileType" fieldName="INSTANCE" extensions="jmx"/>
         <projectConfigurable instance="idea.plugin.jmeter.settings.JmeterSettingsConfigurable"/>
         <configurationType implementation="idea.plugin.jmeter.run.JmeterConfigurationType"/>
         <programRunner implementation="idea.plugin.jmeter.run.JmeterProgramRunner"/>
