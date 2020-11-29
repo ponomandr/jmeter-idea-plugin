@@ -25,7 +25,7 @@ public class PropertyTable extends JPanel {
     }
 
     public LinkedHashMap<String, String> getProperties() {
-        LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+        LinkedHashMap<String, String> map = new LinkedHashMap<>();
         for (int row = 0; row < model.getRowCount(); row++) {
             Object key = model.getValueAt(row, 0);
             if (key == null || isBlank(key.toString())) continue;

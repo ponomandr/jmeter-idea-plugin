@@ -21,7 +21,7 @@ import static org.apache.commons.lang.StringUtils.isBlank;
 public class JmeterRunConfiguration extends RunConfigurationBase implements LocatableConfiguration {
     private String testFile;
     private String propertyFile;
-    private LinkedHashMap<String, String> properties = new LinkedHashMap<String, String>();
+    private LinkedHashMap<String, String> properties = new LinkedHashMap<>();
     private String jvmParameters;
     private String customParameters;
     private String workingDirectory;
@@ -57,7 +57,7 @@ public class JmeterRunConfiguration extends RunConfigurationBase implements Loca
     }
 
     @Override
-    public void writeExternal(Element element) throws WriteExternalException {
+    public void writeExternal(@NotNull Element element) throws WriteExternalException {
         super.writeExternal(element);
         JDOMExternalizer.write(element, "testFile", testFile);
         JDOMExternalizer.write(element, "propertyFile", propertyFile);
@@ -68,7 +68,7 @@ public class JmeterRunConfiguration extends RunConfigurationBase implements Loca
     }
 
     @Override
-    public void readExternal(Element element) throws InvalidDataException {
+    public void readExternal(@NotNull Element element) throws InvalidDataException {
         super.readExternal(element);
         testFile = JDOMExternalizer.readString(element, "testFile");
         propertyFile = JDOMExternalizer.readString(element, "propertyFile");

@@ -46,7 +46,7 @@ public class JmeterFileType implements FileType {
     }
 
     @Override
-    public String getCharset(@NotNull VirtualFile virtualFile, byte[] bytes) {
+    public String getCharset(@NotNull VirtualFile virtualFile, @NotNull byte[] bytes) {
         return CharsetToolkit.UTF8;
     }
 }

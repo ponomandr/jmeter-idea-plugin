@@ -26,7 +26,7 @@ public class CreateJmeterFileAction extends CreateElementActionBase {
 
     @NotNull
     @Override
-    protected PsiElement[] create(String newName, PsiDirectory directory) throws Exception {
+    protected PsiElement[] create(String newName, PsiDirectory directory) {
         String ext = '.' + JmeterFileType.INSTANCE.getDefaultExtension();
         String fileName = newName.endsWith(ext) ? newName : newName + ext;
         String testPlanName = newName.endsWith(ext) ? newName.substring(0, newName.length() - ext.length()) : newName;

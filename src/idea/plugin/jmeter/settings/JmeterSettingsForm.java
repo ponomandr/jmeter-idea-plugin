@@ -7,10 +7,6 @@ import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.vfs.VirtualFile;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class JmeterSettingsForm {
     private JPanel rootPanel;
@@ -19,22 +15,14 @@ public class JmeterSettingsForm {
 
 
     public JmeterSettingsForm(final Project project) {
-        jmeterHome.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                VirtualFile file = FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFolderDescriptor(), project, null);
-                if (file != null) {
-                    jmeterHome.setText(file.getPath());
-                }
+        jmeterHome.addActionListener(e -> {
+            VirtualFile file = FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFolderDescriptor(), project, null);
+            if (file != null) {
+                jmeterHome.setText(file.getPath());
             }
         });
 
-        override.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                jmeterHome.setEnabled(override.isSelected());
-            }
-        });
+        override.addChangeListener(e -> jmeterHome.setEnabled(override.isSelected()));
     }
 
     public void setData(JmeterSettings data) {

@@ -7,8 +7,6 @@ import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.vfs.VirtualFile;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -22,33 +20,24 @@ public class JmeterRunConfigurationForm {
     private TextFieldWithBrowseButton workingDirectory;
 
     public JmeterRunConfigurationForm(final Project project) {
-        testFile.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                VirtualFile file = FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleLocalFileDescriptor(), project, null);
-                if (file != null) {
-                    testFile.setText(file.getPath());
-                }
+        testFile.addActionListener(e -> {
+            VirtualFile file = FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleLocalFileDescriptor(), project, null);
+            if (file != null) {
+                testFile.setText(file.getPath());
             }
         });
 
-        propertyFile.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                VirtualFile file = FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleLocalFileDescriptor(), project, null);
-                if (file != null) {
-                    propertyFile.setText(file.getPath());
-                }
+        propertyFile.addActionListener(e -> {
+            VirtualFile file = FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleLocalFileDescriptor(), project, null);
+            if (file != null) {
+                propertyFile.setText(file.getPath());
             }
         });
 
-        workingDirectory.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                VirtualFile file = FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFolderDescriptor(), project, null);
-                if (file != null) {
-                    workingDirectory.setText(file.getPath());
-                }
+        workingDirectory.addActionListener(e -> {
+            VirtualFile file = FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFolderDescriptor(), project, null);
+            if (file != null) {
+                workingDirectory.setText(file.getPath());
             }
         });
     }

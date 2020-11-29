@@ -8,6 +8,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import idea.plugin.jmeter.JmeterFileType;
+import org.jetbrains.annotations.NotNull;
 
 public class JmeterRunConfigurationProducer extends RunConfigurationProducer<JmeterRunConfiguration> {
 
@@ -16,7 +17,7 @@ public class JmeterRunConfigurationProducer extends RunConfigurationProducer<Jme
     }
 
     @Override
-    protected boolean setupConfigurationFromContext(JmeterRunConfiguration runConfiguration, ConfigurationContext context, Ref<PsiElement> psiElementRef) {
+    protected boolean setupConfigurationFromContext(@NotNull JmeterRunConfiguration runConfiguration, ConfigurationContext context, @NotNull Ref<PsiElement> psiElementRef) {
         Location location = context.getLocation();
         if (location == null) return false;
 
@@ -56,7 +57,7 @@ public class JmeterRunConfigurationProducer extends RunConfigurationProducer<Jme
     }
 
     @Override
-    public boolean isConfigurationFromContext(JmeterRunConfiguration runConfiguration, ConfigurationContext context) {
+    public boolean isConfigurationFromContext(@NotNull JmeterRunConfiguration runConfiguration, ConfigurationContext context) {
         Location location = context.getLocation();
         if (location == null) return false;
 

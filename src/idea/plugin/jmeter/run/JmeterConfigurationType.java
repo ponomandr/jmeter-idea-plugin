@@ -16,8 +16,9 @@ public class JmeterConfigurationType implements ConfigurationType {
 
     public JmeterConfigurationType() {
         myConfigurationFactory = new ConfigurationFactory(this) {
+            @NotNull
             @Override
-            public RunConfiguration createTemplateConfiguration(Project project) {
+            public RunConfiguration createTemplateConfiguration(@NotNull Project project) {
                 return new JmeterRunConfiguration(project, this);
             }
         };
@@ -28,6 +29,7 @@ public class JmeterConfigurationType implements ConfigurationType {
     }
 
 
+    @NotNull
     @Override
     public String getDisplayName() {
         return "JMeter";
