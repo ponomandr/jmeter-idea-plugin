@@ -2,8 +2,10 @@ package idea.plugin.jmeter.run;
 
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.Executor;
+import com.intellij.execution.configuration.CompatibilityAwareRunProfile;
 import com.intellij.execution.configurations.*;
 import com.intellij.execution.runners.ExecutionEnvironment;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.InvalidDataException;
@@ -14,11 +16,12 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 
 import static org.apache.commons.lang.StringUtils.isBlank;
 
-public class JmeterRunConfiguration extends RunConfigurationBase implements LocatableConfiguration {
+public class JmeterRunConfiguration extends ModuleBasedConfiguration<JavaRunConfigurationModule, Object> implements LocatableConfiguration, CompatibilityAwareRunProfile {
     private String testFile;
     private String propertyFile;
     private LinkedHashMap<String, String> properties = new LinkedHashMap<>();
@@ -27,7 +30,11 @@ public class JmeterRunConfiguration extends RunConfigurationBase implements Loca
     private String workingDirectory;
 
     public JmeterRunConfiguration(Project project, ConfigurationFactory configurationFactory) {
-        super(project, configurationFactory, "");
+        this(new JavaRunConfigurationModule(project, false), configurationFactory);
+    }
+
+    public JmeterRunConfiguration(JavaRunConfigurationModule configurationModule, ConfigurationFactory factory) {
+        super("JmeterConfiguration", configurationModule, factory);
     }
 
     @NotNull
@@ -65,6 +72,15 @@ public class JmeterRunConfiguration extends RunConfigurationBase implements Loca
         JDOMExternalizer.write(element, "customParameters", customParameters);
         JDOMExternalizer.write(element, "workingDirectory", workingDirectory);
         JDOMExternalizer.writeMap(element, properties, "properties", "property");
+    }
+
+    @Override
+    public Collection<Module> getValidModules() {
+        return JavaRunConfigurationModule.getModulesForClass(getProject(), getRunClass());
+    }
+
+    private String getRunClass() {
+        return "org.apache.jmeter.NewDriver";
     }
 
     @Override
@@ -138,4 +154,10 @@ public class JmeterRunConfiguration extends RunConfigurationBase implements Loca
     public String suggestedName() {
         return getName();
     }
+
+    @Override
+    public boolean mustBeStoppedToRun(@NotNull RunConfiguration configuration) {
+        return JmeterConfigurationType.TYPE_ID.equals(configuration.getType().getId());
+    }
+
 }

@@ -3,6 +3,7 @@ package idea.plugin.jmeter.run;
 import com.intellij.execution.Location;
 import com.intellij.execution.actions.ConfigurationContext;
 import com.intellij.execution.actions.RunConfigurationProducer;
+import com.intellij.execution.junit.JavaRunConfigurationProducerBase;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -10,11 +11,7 @@ import com.intellij.psi.PsiElement;
 import idea.plugin.jmeter.JmeterFileType;
 import org.jetbrains.annotations.NotNull;
 
-public class JmeterRunConfigurationProducer extends RunConfigurationProducer<JmeterRunConfiguration> {
-
-    public JmeterRunConfigurationProducer() {
-        super(JmeterConfigurationType.getInstance());
-    }
+public class JmeterRunConfigurationProducer extends JavaRunConfigurationProducerBase<JmeterRunConfiguration> {
 
     @Override
     protected boolean setupConfigurationFromContext(@NotNull JmeterRunConfiguration runConfiguration, ConfigurationContext context, @NotNull Ref<PsiElement> psiElementRef) {

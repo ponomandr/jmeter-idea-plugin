@@ -1,62 +1,31 @@
 package idea.plugin.jmeter.run;
 
 import com.intellij.execution.configurations.ConfigurationFactory;
-import com.intellij.execution.configurations.ConfigurationType;
 import com.intellij.execution.configurations.ConfigurationTypeUtil;
 import com.intellij.execution.configurations.RunConfiguration;
+import com.intellij.execution.configurations.SimpleConfigurationType;
 import com.intellij.openapi.project.Project;
-import idea.plugin.jmeter.JmeterFileType;
+import com.intellij.openapi.util.NotNullLazyValue;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
+import static idea.plugin.jmeter.JmeterFileType.FILE_ICON;
 
-public class JmeterConfigurationType implements ConfigurationType {
-
-    private ConfigurationFactory myConfigurationFactory;
+public class JmeterConfigurationType extends SimpleConfigurationType {
+    public static final String TYPE_ID = "idea.plugin.jmeter.run.JmeterConfigurationType";
 
     public JmeterConfigurationType() {
-        myConfigurationFactory = new ConfigurationFactory(this) {
-            @NotNull
-            @Override
-            public RunConfiguration createTemplateConfiguration(@NotNull Project project) {
-                return new JmeterRunConfiguration(project, this);
-            }
-        };
+        super(TYPE_ID, "JMeter", "Configuration to run a JMeter test", NotNullLazyValue.createValue(() -> FILE_ICON));
+    }
+
+    @NotNull
+    @Override
+    public RunConfiguration createTemplateConfiguration(@NotNull Project project) {
+        JmeterRunConfiguration configuration = new JmeterRunConfiguration(project, this);
+        return configuration;
     }
 
     public static JmeterConfigurationType getInstance() {
         return ConfigurationTypeUtil.findConfigurationType(JmeterConfigurationType.class);
     }
 
-
-    @NotNull
-    @Override
-    public String getDisplayName() {
-        return "JMeter";
-    }
-
-    @Override
-    public String getConfigurationTypeDescription() {
-        return null;
-    }
-
-    @Override
-    public Icon getIcon() {
-        return JmeterFileType.FILE_ICON;
-    }
-
-    @NotNull
-    @Override
-    public String getId() {
-        return getClass().getName();
-    }
-
-    @Override
-    public ConfigurationFactory[] getConfigurationFactories() {
-        return new ConfigurationFactory[]{myConfigurationFactory};
-    }
-
-    public ConfigurationFactory getConfigurationFactory() {
-        return myConfigurationFactory;
-    }
 }
